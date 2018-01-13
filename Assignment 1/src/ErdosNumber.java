@@ -3,14 +3,6 @@ import java.util.*;
 /**
  * Created by yilunq on 12/01/18.
  */
-class Node {
-    String name;
-    List<Node> neighbors;
-    public Node(String name) {
-        this.name = name;
-        neighbors = new ArrayList<Node>();
-    }
-}
 public class ErdosNumber {
     public static void main(String[] args) {
         List<String> input = new ArrayList<>();
@@ -26,21 +18,30 @@ public class ErdosNumber {
         System.out.println(new ErdosNumber().findErdosNumber());
     }
 
+
     private int findErdosNumber() {
         List<String> nameList = new ArrayList<String>();
-        nameList.add("A");
+        nameList.add("D");
 
         List<String> paperDatabase = new ArrayList<>();
         paperDatabase.add("A");
         paperDatabase.add("B");
         paperDatabase.add("Erodos");
 
+        String[] papers = new String[]{"A, B, Erodos", "Erodos, C", "A, D", "E, F"};
+
         // 1. initial graph
-        Map<String, Set<String>> graph = initialGraph(nameList, paperDatabase);
+        Map<String, Set<String>> graph = new HashMap<>();
+        for (int i = 0; i < papers.length; i++) {
+            initialGraph(graph, papers[i]);
+        }
+
+        System.out.println(graph);
+
 
         // 2. bfs
         Queue<String> queue = new LinkedList<>();
-        queue.offer("A");
+        queue.offer("D");
 
         int edrosNumber = 0;
 
@@ -55,24 +56,45 @@ public class ErdosNumber {
                     if (neighbor.equals("Erodos")) {
                         return edrosNumber;
                     }
+                    queue.offer(neighbor);
                 }
             }
         }
         return -1;
     }
 
-    private Map<String, Set<String>> initialGraph(List<String> nameList, List<String> paperDatabase) {
-        Map<String, Set<String>> graph = new HashMap<>();
+    private void initialGraph(Map<String, Set<String>> graph,
+                              String paper) {
+        // parse paper database
+        String[] authors = paper.split(", ");
+//        System.out.println(Arrays.toString(authors));
 
         // add other's names to its Set
-        for (String name : nameList) {
-            graph.put(name, new HashSet<String>());
-            for (String author : paperDatabase) {
-                if (!author.equals(name)) {
-                    graph.get(name).add(author);
+        for (String author : authors) {
+            if (!graph.containsKey(author)) {
+                graph.put(author, new HashSet<String>());
+            }
+        }
+
+
+        for (int i = 0; i < authors.length; i++) {
+            for (int j = 0; j < authors.length; j++) {
+                if (i != j) {
+                    graph.get(authors[i]).add(authors[j]);
                 }
             }
         }
-        return graph;
+
+
+//        for (String name : nameList) {
+//            if (!graph.containsKey(name)) {
+//                graph.put(name, new HashSet<String>());
+//            }
+//            for (String author : authors) {
+//                if (!author.equals(name)) {
+//                    graph.get(name).add(author);
+//                }
+//            }
+//        }
     }
 }
