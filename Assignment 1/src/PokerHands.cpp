@@ -44,8 +44,6 @@ tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
 uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 	map<char, bitset<13>> suit_map {{'C', 0}, {'D', 0}, {'H', 0}, {'S', 0}};
 	
-	// Used to store the highest value of a card in the poker hand
-	int highest_card = 0;
 
 	for (const auto& i : pokerHands) {
 		// cout << i[0] << endl;
@@ -66,19 +64,6 @@ uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 		// Store the card in bit representation
 		int ind = 0 - (card_value - 2 - 12);
 		suit_map[ i[1] ][ind] = 1;
-
-
-		highest_card = (card_value > highest_card) ? card_value : highest_card;
-
-
-		// switch (i[1]) {
-		// 	case 'C': suit_map['C'] |= 1 << ( 0 - (card_value - 14) ); break;
-		// 	case 'D': suit_map['D'] |= 1 << ( 0 - (card_value - 14) ); break;
-		// 	case 'H': suit_map['H'] |= 1 << ( 0 - (card_value - 14) ); break;
-		// 	case 'S': suit_map['S'] |= 1 << ( 0 - (card_value - 14) ); break;
-		// 	default: break;
-		// }
-
 	}
 
 	// === Print bit representation of each suit ===
@@ -111,9 +96,7 @@ uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 		int num_bits_set = (int) kv.second.count();
 		max_same_suit = (num_bits_set > max_same_suit) ? num_bits_set : max_same_suit;
 	}
-	// cout << "Max same suit: " << max_same_suit << endl;
-
-	cout << "Highest card: " << highest_card << endl;
+	cout << "Max same suit: " << max_same_suit << endl;
 
 
 	// === Count max consecutive cards ===
@@ -131,9 +114,56 @@ uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 			++max_consecutive;
 		}
 	}
-	// cout << "Max consecutive: " << max_consecutive << endl;
+	cout << "Max consecutive: " << max_consecutive << endl;
 
-	return -1;
+
+	// === Setting ranking information ===
+	bitset<12> rank = 0;
+	// 00 7654 3210
+
+	// Straight flush
+	if (max_consecutive == 5 && max_same_suit == 5) {
+		rank[7] = 1;
+	} 
+	// 4 of a kind
+	else if (max_same_value == 4) {
+		rank[6] = 1;
+	}
+	// Full house
+	else if (max_same_value == 3 && pair_count == 2) {
+		rank[5] = 1;
+	}
+	// Flush
+	else if (max_same_suit == 5) {
+		rank[4] = 1;
+	}
+	// Straight
+	else if (max_consecutive == 5) {
+		rank[3] = 1;
+	}
+	// 3 of a kind
+	else if (max_same_value == 3) {
+		rank[2] = 1;
+	}
+	// 2 pairs
+	else if (max_same_value == 2 && pair_count == 2) {
+		rank[1] = 1;
+	}
+	// 1 pair
+	else if (max_same_value == 2) {
+		rank[0] = 1;
+	}
+
+	cout << "Rank: " << rank << endl;
+
+
+	int offset = 52;
+	bitset<64> result = bitset<64>(rank.to_ullong()) << offset;
+	for (const auto& kv : suit_map) {
+		offset -= 13;
+		result |= bitset<64>(kv.second.to_ullong()) << offset;
+	}
+	return result.to_ullong();
 }
 
 
@@ -149,8 +179,8 @@ int main() {
 		cout << "Black: " << black << endl 
 		     << "White: " << white << endl;
 
-		construct_bit_representation(black);
-		construct_bit_representation(white);
+		uint64_t black_bit_representation = construct_bit_representation(black);
+		uint64_t white_bit_representation = construct_bit_representation(white);
 
 		getline(cin, input_line);
 	}
