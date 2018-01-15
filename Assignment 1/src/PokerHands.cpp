@@ -118,47 +118,51 @@ uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 
 
 	// === Setting ranking information ===
-	bitset<12> rank = 0;
-	// 00 7654 3210
+	bitset<12> info = 0;
+	// 0000 0000 0000
+	// The first 4-bit stores rank code; second 4-bit stores highest card; third 4-bit not used
 
+	int rank_code = 0;
 	// Straight flush
 	if (max_consecutive == 5 && max_same_suit == 5) {
-		rank[7] = 1;
+		rank_code = 8;
 	} 
 	// 4 of a kind
 	else if (max_same_value == 4) {
-		rank[6] = 1;
+		rank_code = 7;
 	}
 	// Full house
 	else if (max_same_value == 3 && pair_count == 2) {
-		rank[5] = 1;
+		rank_code = 6;
 	}
 	// Flush
 	else if (max_same_suit == 5) {
-		rank[4] = 1;
+		rank_code = 5;
 	}
 	// Straight
 	else if (max_consecutive == 5) {
-		rank[3] = 1;
+		rank_code = 4;
 	}
 	// 3 of a kind
 	else if (max_same_value == 3) {
-		rank[2] = 1;
+		rank_code = 3;
 	}
 	// 2 pairs
 	else if (max_same_value == 2 && pair_count == 2) {
-		rank[1] = 1;
+		rank_code = 2;
 	}
 	// 1 pair
 	else if (max_same_value == 2) {
-		rank[0] = 1;
+		rank_code = 1;
 	}
 
-	cout << "Rank: " << rank << endl;
+	// Setting rank code in info bitset
+	info |= bitset<12>(rank_code) << 8;
+	cout << "Poker Hand Info: " << info << endl;
 
 
 	int offset = 52;
-	bitset<64> result = bitset<64>(rank.to_ullong()) << offset;
+	bitset<64> result = bitset<64>(info.to_ullong()) << offset;
 	for (const auto& kv : suit_map) {
 		offset -= 13;
 		result |= bitset<64>(kv.second.to_ullong()) << offset;
