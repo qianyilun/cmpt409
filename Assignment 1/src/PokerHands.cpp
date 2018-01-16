@@ -1,6 +1,7 @@
 #include <bitset>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 #include <sstream>
 #include <tuple>
@@ -70,6 +71,7 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         highest_card = (card_value > highest_card) ? card_value : highest_card;
     }
 
+    cout << endl;
     cout << "Highest card: " << highest_card << endl;
 
     // === Print bit representation of each suit ===
@@ -84,15 +86,34 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     int max_same_value = 0;
     int pair_count = 0;
 
+    // Used to store the card which appears the most and the second-most in the hand
+    int max_same_value_card = 0;
+    int second_max_same_value_card = 0;
+
     for (int i = 0; i < 13; i++) {
         int sum = suit_map['C'][i] + suit_map['D'][i] + suit_map['H'][i] + suit_map['S'][i];
         
-        max_same_value = (sum > max_same_value) ? sum : max_same_value;
+        if (sum > max_same_value) {
+            max_same_value = sum;
+            second_max_same_value_card = max_same_value_card;
+            max_same_value_card = 0 - (i - 14);
+        }
+
         if (sum > 1) {
             ++pair_count;
+            second_max_same_value_card = 0 - (i - 14);
         }
     }
+
+    // There is no appear most and 2nd-most card since no same value in the hand
+    if (pair_count == 0) {
+        max_same_value_card = 0;
+        second_max_same_value_card = 0;
+    }
+
     cout << "Max same value: " << max_same_value << endl;
+    cout << "Appear-most card: " << max_same_value_card << endl;
+    cout << "Appear 2nd-most card: " << second_max_same_value_card << endl;
     cout << "Pair count: " << pair_count << endl;
 
 
@@ -126,20 +147,30 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     // === Setting ranking information ===
     bitset<12> info = 0;
     // 0000 0000 0000
-    // The first 4-bit stores rank code; second 4-bit stores highest card; third 4-bit not used
+    // The first 4-bit stores rank code; 
+    // second 4-bit stores decision card value; 
+    // third 4-bit stores secondary decision card value;
 
     int rank_code = 0;
+
+    // Decision card value will help determine win/lose of both hands are the same rank.
+    // The value can be highest_card, max_same_value_card.
+    int decision_card_value = 0;
+    
     // Straight flush
     if (max_consecutive == 5 && max_same_suit == 5) {
         rank_code = 8;
+        decision_card_value = highest_card;
     } 
     // 4 of a kind
     else if (max_same_value == 4) {
         rank_code = 7;
+        decision_card_value = max_same_value_card;
     }
     // Full house
     else if (max_same_value == 3 && pair_count == 2) {
         rank_code = 6;
+        decision_card_value = max_same_value_card;
     }
     // Flush
     else if (max_same_suit == 5) {
@@ -148,25 +179,36 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     // Straight
     else if (max_consecutive == 5) {
         rank_code = 4;
+        decision_card_value = highest_card;
     }
     // 3 of a kind
     else if (max_same_value == 3) {
         rank_code = 3;
+        decision_card_value = max_same_value_card;
     }
     // 2 pairs
     else if (max_same_value == 2 && pair_count == 2) {
         rank_code = 2;
+        decision_card_value = max_same_value_card;
+        // Keep the secondary decision value (value of the other pair) in info bit
+        info|= bitset<12>(second_max_same_value_card);
     }
     // 1 pair
     else if (max_same_value == 2) {
         rank_code = 1;
+        decision_card_value = max_same_value_card;
+    } 
+    // High Card
+    else {
+        decision_card_value = highest_card;
     }
 
     // Setting rank code in info bitset
     info |= bitset<12>(rank_code) << 8;
 
-    // Setting highest card in info bitset
-    info |= bitset<12>(highest_card) << 4;
+    // Setting decition card value in info bitset
+    info |= bitset<12>(decision_card_value) << 4;
+
     cout << "Poker Hand Info: " << info << endl;
 
     int offset = 52;
@@ -177,6 +219,80 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         result |= bitset<64>(kv.second.to_ullong()) << offset;
     }
     return result;
+}
+
+
+int compare(const bitset<64>& a, const bitset<64>& b) {
+    uint16_t info_code_a = (a >> 52).to_ulong(),
+             info_code_b = (b >> 52).to_ulong();
+
+    cout << endl;
+    cout << "Info code: " << bitset<16>(info_code_a) << " " << bitset<16>(info_code_b) << endl;
+    
+    if (info_code_a < info_code_b) {
+        return -1;
+    } else if (info_code_a > info_code_b) {
+        return 1;
+    } else if (info_code_a == info_code_b) {
+        
+        int rank_code = info_code_a >> 8;
+        switch ( rank_code ) {
+
+            case 8: // Intentionally fall over -- Straight Flush
+            case 7: // Intentionally fall over -- 4 of a kind
+            case 6: // Intentionally fall over -- Full house
+            case 4: // Intentionally fall over -- Straight
+            case 3: // Intentionally fall over -- 3 of a kind
+                return 0;
+
+            case 5: // -- Flush
+            case 2: // -- 2 pairs
+            case 1: // -- Pair
+            case 0: // -- High Card
+                // Since the code is 16-bit long, need to be careful about shifting.
+                uint16_t decision_code = (info_code_a & 0x00F0) >> 4, /* 0000 0000 1111 0000 */
+                         second_decision_code = info_code_a & 0x000F; /* 0000 0000 0000 1111 */
+
+
+                bitset<13> or_a = 0, or_b = 0;
+                for (int i = 0; i < 13; ++i) {
+                    or_a |= (a[i] | a[i + 13] | a[i + 26] | a[i + 39]) << i;
+                    or_b |= (b[i] | b[i + 13] | b[i + 26] | b[i + 39]) << i;
+                }
+
+                cout << "Decision code: " << decision_code << endl
+                     << "Second decision code: " << second_decision_code << endl
+                     << "or_a: " << or_a << " or_b: " << or_b << endl;
+
+                // Don't do anything to High Card
+                if (rank_code != 0) {
+                    or_a[0 - (decision_code - 14)] = 0;
+                    or_b[0 - (decision_code - 14)] = 0;
+                }
+
+                // 2 pairs
+                if (rank_code == 2) {
+                    or_a[0 - (second_decision_code - 14)] = 0;
+                    or_b[0 - (second_decision_code - 14)] = 0;
+                }
+
+                cout << "Changed or_a: " << or_a << " or_b: " << or_b << endl;
+
+                // We are using the most significant bit in bitset as our least signifiant bit
+                uint32_t or_a_int = or_a.to_ulong(), or_b_int = or_b.to_ulong();
+                if (or_a_int < or_b_int) {
+                    return 1;
+                } else if (or_a_int > or_b_int) {
+                    return -1;
+                } else if (or_a_int == or_b_int) {
+                    return 0;
+                }
+
+        }
+
+    }
+
+    return -2;
 }
 
 
@@ -192,8 +308,17 @@ int main() {
         cout << "Black: " << black << endl 
              << "White: " << white << endl;
 
-        bitset<64> black_bit_representation = construct_bit_representation(black);
-        bitset<64> white_bit_representation = construct_bit_representation(white);
+        bitset<64> black_bit = construct_bit_representation(black);
+        bitset<64> white_bit = construct_bit_representation(white);
+
+        int result = compare(black_bit, white_bit);
+        switch (result) {
+            case -1: cout << "White wins. " << endl; break;
+            case 0:  cout << "Tie. "        << endl; break;
+            case 1:  cout << "Black wins. " << endl; break;
+            default: 
+                throw logic_error("Comparison result '" + to_string(result) + "' is unexpected. ");
+        }
 
         getline(cin, input_line);
     }
