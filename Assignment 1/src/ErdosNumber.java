@@ -8,11 +8,11 @@ import java.util.*;
  */
 public class ErdosNumber {
     public static void main(String[] args) throws IOException {
-        int nameSize = 2;
-        String[] names = new String[nameSize];
-
-        names[0] = "Smith, M.N.";
-        names[1] = "Hsueh, Z";
+//        int nameSize = 2;
+//        String[] names = new String[nameSize];
+//
+//        names[0] = "Smith, M.N.";
+//        names[1] = "Hsueh, Z";
 //        names[1] = "Chen, X.";
 
         Map<String, Set<String>> graph = new HashMap<>();
@@ -37,10 +37,14 @@ public class ErdosNumber {
                 initialGraph(graph, parts);
             }
 
-            // 确认一下图的结构
-            System.out.println(graph);
+            String[] inputNames = new String[N];
+            for(int n = 0; n < N; ++n) {
+                inputNames[n] = br.readLine().trim();
+            }
 
-            findErdosNumber(graph, names);
+//            System.out.println(Arrays.toString(inputNames));
+
+            findErdosNumber(graph, inputNames);
         }
     }
 
@@ -53,6 +57,8 @@ public class ErdosNumber {
             } else {
                 System.out.println(names[i] + " "+ result);
             }
+
+//            System.out.println("*****");
         }
 
         return -1;
@@ -63,7 +69,12 @@ public class ErdosNumber {
         queue.offer(name);
         int edrosNumber = 0;
 
+        int levels = graph.size();
+
         while (!queue.isEmpty()) {
+            if (edrosNumber > graph.size()) {
+                return -1;
+            }
             edrosNumber++;
 
             int size = queue.size();
@@ -73,11 +84,13 @@ public class ErdosNumber {
                 if (graph.get(head) == null) {
                     break;
                 }
+
                 for (String neighbor : graph.get(head)) {
                     if (neighbor.equals("Erdos, P.")) {
                         return edrosNumber;
                     }
                     queue.offer(neighbor);
+//                    System.out.println(neighbor);
                 }
             }
         }
