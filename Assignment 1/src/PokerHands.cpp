@@ -44,6 +44,8 @@ tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
 bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     map<char, bitset<13>> suit_map {{'C', 0}, {'D', 0}, {'H', 0}, {'S', 0}};
     
+    // Used to store the highest value of a card in the poker hand
+    int highest_card = 0;
 
     for (const auto& i : pokerHands) {
         // cout << i[0] << endl;
@@ -64,7 +66,11 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         // Store the card in bit representation
         int ind = 0 - (card_value - 2 - 12);
         suit_map[ i[1] ][ind] = 1;
+
+        highest_card = (card_value > highest_card) ? card_value : highest_card;
     }
+
+    cout << "Highest card: " << highest_card << endl;
 
     // === Print bit representation of each suit ===
 
@@ -158,8 +164,10 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
 
     // Setting rank code in info bitset
     info |= bitset<12>(rank_code) << 8;
-    cout << "Poker Hand Info: " << info << endl;
 
+    // Setting highest card in info bitset
+    info |= bitset<12>(highest_card) << 4;
+    cout << "Poker Hand Info: " << info << endl;
 
     int offset = 52;
     bitset<64> result = bitset<64>(info.to_ullong()) << offset;
