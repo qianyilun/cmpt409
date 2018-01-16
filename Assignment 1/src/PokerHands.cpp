@@ -41,7 +41,7 @@ tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
 }
 
 
-uint64_t construct_bit_representation(const vector<string>& pokerHands) {
+bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     map<char, bitset<13>> suit_map {{'C', 0}, {'D', 0}, {'H', 0}, {'S', 0}};
     
 
@@ -163,11 +163,12 @@ uint64_t construct_bit_representation(const vector<string>& pokerHands) {
 
     int offset = 52;
     bitset<64> result = bitset<64>(info.to_ullong()) << offset;
+    
     for (const auto& kv : suit_map) {
         offset -= 13;
         result |= bitset<64>(kv.second.to_ullong()) << offset;
     }
-    return result.to_ullong();
+    return result;
 }
 
 
@@ -183,8 +184,8 @@ int main() {
         cout << "Black: " << black << endl 
              << "White: " << white << endl;
 
-        uint64_t black_bit_representation = construct_bit_representation(black);
-        uint64_t white_bit_representation = construct_bit_representation(white);
+        bitset<64> black_bit_representation = construct_bit_representation(black);
+        bitset<64> white_bit_representation = construct_bit_representation(white);
 
         getline(cin, input_line);
     }
