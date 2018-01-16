@@ -36,7 +36,7 @@ tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
         white.push_back(temp);
     }
 
-    // return a std::pair which contains black and white vectors.
+    // return a std::tuple which contains black and white vectors.
     return make_tuple(black, white);
 }
 
@@ -163,7 +163,7 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
 
     int offset = 52;
     bitset<64> result = bitset<64>(info.to_ullong()) << offset;
-    
+
     for (const auto& kv : suit_map) {
         offset -= 13;
         result |= bitset<64>(kv.second.to_ullong()) << offset;
