@@ -1,3 +1,8 @@
+
+/*  Created by Peter Tan  @peterjtan
+ *  Date: 2018-01-12
+ */
+
 #include <bitset>
 #include <iostream>
 #include <map>
