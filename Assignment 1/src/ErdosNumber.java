@@ -69,7 +69,7 @@ public class ErdosNumber {
         queue.offer(name);
         int edrosNumber = 0;
 
-        int levels = graph.size();
+        Set<String> visited = new HashSet<>();
 
         while (!queue.isEmpty()) {
             if (edrosNumber > graph.size()) {
@@ -80,6 +80,7 @@ public class ErdosNumber {
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 String head = queue.poll();
+                visited.add(head);
                 // 若不存在图中
                 if (graph.get(head) == null) {
                     break;
@@ -88,6 +89,9 @@ public class ErdosNumber {
                 for (String neighbor : graph.get(head)) {
                     if (neighbor.equals("Erdos, P.")) {
                         return edrosNumber;
+                    }
+                    if (visited.contains(neighbor)) {
+                        continue;
                     }
                     queue.offer(neighbor);
 //                    System.out.println(neighbor);
