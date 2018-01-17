@@ -345,9 +345,9 @@ int main() {
 
         int result = compare(black_bit, white_bit);
         switch (result) {
-            case -1: cout << "White wins. " << endl; break;
-            case 0:  cout << "Tie. "        << endl; break;
-            case 1:  cout << "Black wins. " << endl; break;
+            case -1: cout << "White wins." << endl; break;
+            case 0:  cout << "Tie."        << endl; break;
+            case 1:  cout << "Black wins." << endl; break;
             default: 
                 throw logic_error("Comparison result '" + to_string(result) + "' is unexpected. ");
         }
