@@ -34,6 +34,17 @@ ostream& operator <<(ostream& os, const vector<string>& input) {
 }
 
 
+template<size_t n>
+bitset<n> reverse_bits(bitset<n> input) {
+    bitset<n> result = 0;
+    for (int i = n - 1; i >= 0; --i) {
+        result[0 - (i - n)] = input[i];
+    }
+    return result;
+}
+
+
+
 // Split the input line into 2 vectors for black and white containing their poker hands
 tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
     istringstream ss(input);
@@ -152,7 +163,7 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         or_of_all_suits |= kv.second;
     }
     // cout << or_of_all_suits << endl;
-    for (unsigned int i = 1; i < or_of_all_suits.size(); ++i) {
+    for (unsigned int i = 0; i < or_of_all_suits.size(); ++i) {
         if (max_consecutive == 0 && or_of_all_suits[i] != or_of_all_suits[i - 1]) {
             ++max_consecutive;
         } else if (or_of_all_suits[i] != 0 && or_of_all_suits[i] == or_of_all_suits[i - 1]) {
@@ -293,7 +304,7 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
 
 
                 // Don't do anything to High Card
-                if (rank_code != 0) {
+                if (rank_code != 0 && rank_code != 5) {
                     or_a[0 - (decision_code - 14)] = 0;
                     or_b[0 - (decision_code - 14)] = 0;
                 }
@@ -304,16 +315,20 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
                     or_b[0 - (second_decision_code - 14)] = 0;
                 }
 
+                or_a = reverse_bits(or_a);
+                or_b = reverse_bits(or_b);
+
 #ifdef DEBUG
                 cout << "Changed or_a: " << or_a << " or_b: " << or_b << endl;
 #endif
 
                 // We are using the most significant bit in bitset as our least signifiant bit
                 uint32_t or_a_int = or_a.to_ulong(), or_b_int = or_b.to_ulong();
+                
                 if (or_a_int < or_b_int) {
-                    return 1;
-                } else if (or_a_int > or_b_int) {
                     return -1;
+                } else if (or_a_int > or_b_int) {
+                    return 1;
                 } else if (or_a_int == or_b_int) {
                     return 0;
                 }
@@ -324,6 +339,7 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
 
     return -2;
 }
+
 
 
 int main() {
