@@ -3,6 +3,12 @@
  *  Date: 2018-01-12
  */
 
+
+// Define DEBUG to show debugging console ouputs.
+// Define RELEASE to omit debugging console ouputs.
+#define RELEASE
+
+
 #include <bitset>
 #include <iostream>
 #include <map>
@@ -76,6 +82,7 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         highest_card = (card_value > highest_card) ? card_value : highest_card;
     }
 
+#ifdef DEBUG 
     cout << endl;
     cout << "Highest card: " << highest_card << endl;
 
@@ -85,6 +92,7 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         cout << kv.second << " ";
     }
     cout << endl;
+#endif
 
 
     // === Count max same value and # of pairs ===
@@ -116,10 +124,12 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         second_max_same_value_card = 0;
     }
 
+#ifdef DEBUG
     cout << "Max same value: " << max_same_value << endl;
     cout << "Appear-most card: " << max_same_value_card << endl;
     cout << "Appear 2nd-most card: " << second_max_same_value_card << endl;
     cout << "Pair count: " << pair_count << endl;
+#endif
 
 
     // === Count max same suit ===
@@ -128,7 +138,10 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
         int num_bits_set = (int) kv.second.count();
         max_same_suit = (num_bits_set > max_same_suit) ? num_bits_set : max_same_suit;
     }
+
+#ifdef DEBUG
     cout << "Max same suit: " << max_same_suit << endl;
+#endif
 
 
     // === Count max consecutive cards ===
@@ -146,7 +159,10 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
             ++max_consecutive;
         }
     }
+
+#ifdef DEBUG
     cout << "Max consecutive: " << max_consecutive << endl;
+#endif
 
 
     // === Setting ranking information ===
@@ -214,7 +230,9 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     // Setting decition card value in info bitset
     info |= bitset<12>(decision_card_value) << 4;
 
+#ifdef DEBUG
     cout << "Poker Hand Info: " << info << endl;
+#endif
 
     int offset = 52;
     bitset<64> result = bitset<64>(info.to_ullong()) << offset;
@@ -231,8 +249,10 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
     uint16_t info_code_a = (a >> 52).to_ulong(),
              info_code_b = (b >> 52).to_ulong();
 
+#ifdef DEBUG
     cout << endl;
     cout << "Info code: " << bitset<16>(info_code_a) << " " << bitset<16>(info_code_b) << endl;
+#endif
     
     if (info_code_a < info_code_b) {
         return -1;
@@ -265,9 +285,12 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
                     or_b |= (b[i] | b[i + 13] | b[i + 26] | b[i + 39]) << i;
                 }
 
+#ifdef DEBUG
                 cout << "Decision code: " << decision_code << endl
                      << "Second decision code: " << second_decision_code << endl
                      << "or_a: " << or_a << " or_b: " << or_b << endl;
+#endif
+
 
                 // Don't do anything to High Card
                 if (rank_code != 0) {
@@ -281,7 +304,9 @@ int compare(const bitset<64>& a, const bitset<64>& b) {
                     or_b[0 - (second_decision_code - 14)] = 0;
                 }
 
+#ifdef DEBUG
                 cout << "Changed or_a: " << or_a << " or_b: " << or_b << endl;
+#endif
 
                 // We are using the most significant bit in bitset as our least signifiant bit
                 uint32_t or_a_int = or_a.to_ulong(), or_b_int = or_b.to_ulong();
@@ -310,8 +335,10 @@ int main() {
         vector<string> black, white;
         tie(black, white) = split(input_line, ' ');
 
+#ifdef DEBUG
         cout << "Black: " << black << endl 
              << "White: " << white << endl;
+#endif
 
         bitset<64> black_bit = construct_bit_representation(black);
         bitset<64> white_bit = construct_bit_representation(white);
