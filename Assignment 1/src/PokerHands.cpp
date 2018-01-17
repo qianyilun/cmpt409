@@ -9,13 +9,14 @@
 #define RELEASE
 
 
+#include <algorithm>
 #include <bitset>
 #include <iostream>
 #include <map>
+#include <utility> // std::pair
 #include <stdexcept>
 #include <string>
 #include <sstream>
-#include <tuple>
 #include <vector>
 using namespace std;
 
@@ -34,6 +35,37 @@ ostream& operator <<(ostream& os, const vector<string>& input) {
 }
 
 
+// Overload << operator for printing a map<K, V> object
+template<class K, class V>
+ostream& operator <<(ostream& os, const map<K, V>& input) {
+    os << "{ ";
+    for (const auto& kv : input) {
+        cout << "{ " << kv.first << ", " << kv.second << " }";
+    }
+    os << " }";
+    return os;
+}
+
+
+template<class K, class V>
+pair<K, V> get_max(const map<K, V>& input) {
+    return *max_element(input.begin(), input.end(), 
+        [](const pair<K, V>& p1, const pair<K, V>& p2) {
+            return p1.second < p2.second;
+        });
+}
+
+
+// Not very efficient implementation: Delete the largest from map than find the max
+template<class K, class V>
+pair<K, V> get_2nd_max(const map<K, V>& input) {
+    auto max = get_max(input);
+    map<K, V> temp = input;
+    temp.erase(max.first);
+    return get_max(temp);
+}
+
+
 template<size_t n>
 bitset<n> reverse_bits(bitset<n> input) {
     bitset<n> result = 0;
@@ -46,7 +78,7 @@ bitset<n> reverse_bits(bitset<n> input) {
 
 
 // Split the input line into 2 vectors for black and white containing their poker hands
-tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
+pair<vector<string>, vector<string>> split(const string& input, char delimit) {
     istringstream ss(input);
     string temp;
     vector<string> black, white;
@@ -60,17 +92,22 @@ tuple<vector<string>, vector<string>> split(const string& input, char delimit) {
     }
 
     // return a std::tuple which contains black and white vectors.
-    return make_tuple(black, white);
+    return make_pair(black, white);
 }
 
 
 bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     map<char, bitset<13>> suit_map {{'C', 0}, {'D', 0}, {'H', 0}, {'S', 0}};
+    map<char, int> suit_count;
+    map<int, int> value_count;
     
     // Used to store the highest value of a card in the poker hand
     int highest_card = 0;
 
     for (const auto& i : pokerHands) {
+
+        suit_count[i[1]]++;
+
         // cout << i[0] << endl;
         int card_value = i[0] - '0'; // Converting from char to int
         // cout << card_value << endl;
@@ -86,12 +123,15 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
             }
         }
 
+        value_count[card_value]++;
+
         // Store the card in bit representation
         int ind = 0 - (card_value - 2 - 12);
         suit_map[ i[1] ][ind] = 1;
 
         highest_card = (card_value > highest_card) ? card_value : highest_card;
     }
+
 
 #ifdef DEBUG 
     cout << endl;
@@ -114,26 +154,23 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
     int max_same_value_card = 0;
     int second_max_same_value_card = 0;
 
-    for (int i = 0; i < 13; i++) {
-        int sum = suit_map['C'][i] + suit_map['D'][i] + suit_map['H'][i] + suit_map['S'][i];
-        
-        if (sum > max_same_value) {
-            max_same_value = sum;
-            second_max_same_value_card = max_same_value_card;
-            max_same_value_card = 0 - (i - 14);
-        }
 
-        if (sum > 1) {
+    tie(max_same_value_card, max_same_value) = get_max(value_count);
+    tie(second_max_same_value_card, std::ignore) = get_2nd_max(value_count);
+
+    for (const auto& kv : value_count) {
+        if (kv.second > 1) {
             ++pair_count;
-            second_max_same_value_card = 0 - (i - 14);
         }
     }
+
 
     // There is no appear most and 2nd-most card since no same value in the hand
     if (pair_count == 0) {
         max_same_value_card = 0;
         second_max_same_value_card = 0;
     }
+
 
 #ifdef DEBUG
     cout << "Max same value: " << max_same_value << endl;
@@ -144,11 +181,8 @@ bitset<64> construct_bit_representation(const vector<string>& pokerHands) {
 
 
     // === Count max same suit ===
-    int max_same_suit = 0;
-    for (const auto& kv : suit_map) {
-        int num_bits_set = (int) kv.second.count();
-        max_same_suit = (num_bits_set > max_same_suit) ? num_bits_set : max_same_suit;
-    }
+    int max_same_suit = get_max(suit_count).second;
+
 
 #ifdef DEBUG
     cout << "Max same suit: " << max_same_suit << endl;
