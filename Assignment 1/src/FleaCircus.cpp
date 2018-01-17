@@ -3,9 +3,12 @@
 
 #include <iostream>
 #include <vector>
+#include <stdio.h>
 
 using namespace std;
-
+const int N = 5000;
+int position1, position2, path[N],pathCounter;
+vector<int> g[N];
 bool dfs(int x, int y,int parent){
   /**
   depth first search that starts with x and terminate at y
@@ -25,9 +28,6 @@ bool dfs(int x, int y,int parent){
   return false;
 }
 int main(){
-  const int N = 5000;
-  int position1, position2, path[N],pathCounter;
-  vector<int> g[N];
   int n;
   // Problem says: "The input file contains multiple test cases"
   // So, while we are reading the input, we can test when we've run out of input
