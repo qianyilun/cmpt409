@@ -201,7 +201,6 @@ bool Board::check_board(int which_king) {
     }
 
 
-    // Checking knight...
     return false;
 
 }
