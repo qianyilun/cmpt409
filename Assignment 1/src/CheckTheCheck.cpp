@@ -24,8 +24,8 @@ public:
     bool empty();
     friend ostream& operator <<(ostream&, const Board&);
     void find_kings();
-    bool check_rbqk(int);
-    bool is_under_check(int which_king, bool& blocked, 
+    bool check_board(int);
+    bool is_under_check(int which_king, int& blocked, 
                         int king_row, int king_col, int piece_row, int piece_col);
 };
 
@@ -76,10 +76,16 @@ void Board::find_kings() {
 // Param which_king: 0 -- White king
 //                   1 -- Black king
 // The bool variable "guarded" will be updated if we see a self piece along the way
-bool Board::is_under_check(int which_king, bool& blocked, 
+bool Board::is_under_check(int which_king, int& blocked, 
                     int king_row, int king_col, int piece_row, int piece_col) {
+
+    // Account for vector index out of bound
+    if (piece_row < 0 || piece_row > 7 || piece_col < 0 || piece_col > 7) {
+        return false;
+    }
     
     char character = data[piece_row][piece_col];
+    // cout << "king: " << which_king << " row: " << piece_row << " col: " << piece_col << " char: " << character;
 
     if (character == '.') {
         // cout << endl;
@@ -89,39 +95,48 @@ bool Board::is_under_check(int which_king, bool& blocked,
     int offset = (which_king == 0) ? 'a' : 'A';
 
     int diff = character - offset;
+    
     // cout << " diff: " << diff << " result: " << (diff >= 0 && diff <= 25) << " blocked: " << blocked << endl;
     
-    if (diff >= 0 && diff <= 25 && !blocked) {
+    if (diff >= 0 && diff <= 25 && (character == 'n' || character == 'N')) {
+        return true;
+    }
+    else if (diff >= 0 && diff <= 25 && blocked == 0) {
         if ( (character == 'k' || character == 'K') && 
              (abs(king_col - piece_col) > 1 || abs(king_row - piece_row) > 1) ) {
-            blocked = true;
+            blocked = 1;
+            return false;
+        }
+        else if ( (character == 'p' || character == 'P') &&
+             (abs(king_col - piece_col) > 1 || abs(king_row - piece_row) > 1) ) {
+            blocked = 1;
             return false;
         }
         else if ( (character == 'p' && which_king == 0) && 
-             (abs(piece_col - king_col) != 1 || piece_row - king_row != -1) ) {
-            blocked = true;
+             (abs(piece_col - king_col) != 1 || piece_row - king_row == 1 || piece_row - king_row == 0) ) {
+            blocked = 1;
             return false;
         }
         else if ( (character == 'P' && which_king == 1) && 
-             (abs(piece_col - king_col) != 1 || piece_row - king_row != 1) ) {
-            blocked = true;
+             (abs(piece_col - king_col) != 1 || piece_row - king_row == -1 || piece_row - king_row == 0) ) {
+            blocked = 1;
             return false;
         }
         else if ( (character == 'b' || character == 'B') && 
              (abs(king_col - piece_col) == 0 || abs(king_row - piece_row) == 0) ) {
-            blocked = true;
+            blocked = 1;
             return false;
         }
         else if ( (character == 'r' || character == 'R') && 
              (abs(king_col - piece_col) != 0 && abs(king_row - piece_row) != 0) ) {
-            blocked = true;
+            blocked = 1;
             return false;
         }
         
         return true;
     }
     else {
-        blocked = true;
+        blocked = 1;
         return false;
     }
 }
@@ -130,7 +145,7 @@ bool Board::is_under_check(int which_king, bool& blocked,
 // Param: 0 -- White king
 //        1 -- Black king
 // The function will check if there is oponnet's (r)ook, (b)ishop, (q)ueen, (k)ing nearby.
-bool Board::check_rbqk(int which_king) {
+bool Board::check_board(int which_king) {
     int row, col;
     if (which_king == 0) {
         tie(row, col) = white_king;
@@ -138,50 +153,57 @@ bool Board::check_rbqk(int which_king) {
         tie(row, col) = black_king;
     }
 
+    int blocked = -1;
+    bool knight_result =
+           is_under_check(which_king, blocked, row, col, row + 1, col - 2) ||
+           is_under_check(which_king, blocked, row, col, row - 1, col - 2) ||
+           is_under_check(which_king, blocked, row, col, row + 1, col + 2) ||
+           is_under_check(which_king, blocked, row, col, row - 1, col + 2) ||
+           is_under_check(which_king, blocked, row, col, row + 2, col - 1) ||
+           is_under_check(which_king, blocked, row, col, row - 2, col - 1) ||
+           is_under_check(which_king, blocked, row, col, row + 2, col + 1) ||
+           is_under_check(which_king, blocked, row, col, row - 2, col + 1);
+    if (knight_result) 
+        return true;
+
     int i, r, c;
-    bool blocked;
+
     // Checking row...
-    for (i = col - 1, blocked = 0; i >= 0; --i) {
-        // cout << "row: " << row << " col: " << i << " char: " << data[row][i];
+    for (i = col - 1, blocked = 0; i >= 0 && !blocked; --i) {
         if (is_under_check(which_king, blocked, row, col, row, i)) return true;
     }
-    for (i = col + 1, blocked = 0; i < 8; ++i) {
-        // cout << "row: " << row << " col: " << i << " char: " << data[row][i];
+    for (i = col + 1, blocked = 0; i < 8 && !blocked; ++i) {
         if (is_under_check(which_king, blocked, row, col, row, i)) return true;
     }
 
     // Checking column...
-    for (i = row - 1, blocked = 0; i >= 0; --i) {
-        // cout << "row: " << i << " col: " << col << " char: " << data[i][col];
+    for (i = row - 1, blocked = 0; i >= 0 && !blocked; --i) {
         if (is_under_check(which_king, blocked, row, col, i, col)) return true;
     }
-    for (i = row + 1, blocked = 0; i < 8; ++i) {
-        // cout << "row: " << i << " col: " << col << " char: " << data[i][col];
+    for (i = row + 1, blocked = 0; i < 8 && !blocked; ++i) {
         if (is_under_check(which_king, blocked, row, col, i, col)) return true;
     }
 
     // Checking left-right diagonal...
-    for (r = row - 1, c = col - 1, blocked = 0; r >= 0 && c >= 0; --r, --c) {
-        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+    for (r = row - 1, c = col - 1, blocked = 0; r >= 0 && c >= 0 && !blocked; --r, --c) {
         if (is_under_check(which_king, blocked, row, col, r, c)) return true;
     }
-    for (r = row + 1, c = col + 1, blocked = 0; r < 8 && c < 8; ++r, ++c) {
-        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+    for (r = row + 1, c = col + 1, blocked = 0; r < 8 && c < 8 && !blocked; ++r, ++c) {
         if (is_under_check(which_king, blocked, row, col, r, c)) return true;
     }
 
     // Checking right-left diagonal...
-    for (r = row - 1, c = col + 1, blocked = 0; r >= 0 && c < 8; --r, ++c) {
-        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+    for (r = row - 1, c = col + 1, blocked = 0; r >= 0 && c < 8 && !blocked; --r, ++c) {
         if (is_under_check(which_king, blocked, row, col, r, c)) return true;
     }
-    for (r = row + 1, c = col - 1, blocked = 0; r < 8 && c >= 0; ++r, --c) {
-        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+    for (r = row + 1, c = col - 1, blocked = 0; r < 8 && c >= 0 && !blocked; ++r, --c) {
         if (is_under_check(which_king, blocked, row, col, r, c)) return true;
     }
 
 
+    // Checking knight...
     return false;
+
 }
 
 
@@ -216,9 +238,9 @@ int main() {
             cout << "Game #" << gameNum << ": ";
 
             // Do comparison
-            if (b->check_rbqk(1)) {
+            if (b->check_board(1)) {
                 cout << "black king is in check." << endl;
-            } else if (b->check_rbqk(0)) {
+            } else if (b->check_board(0)) {
                 cout << "white king is in check." << endl;
             } else {
                 cout << "no king is in check." << endl;
