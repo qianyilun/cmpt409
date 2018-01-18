@@ -71,10 +71,26 @@ void Board::find_kings() {
 }
 
 
-bool is_oponnet(int character, int offset) {
+// Param which_king: 0 -- White king
+//                   1 -- Black king
+// The bool variable "guarded" will be updated if we see a self piece along the way
+bool is_under_check(int character, int which_king, bool& guarded) {
+    if (character == '.') {
+        // cout << endl;
+        return false;
+    }
+
+    int offset = (which_king == 0) ? 'a' : 'A';
+
     int diff = character - offset;
-    cout << " diff: " << diff << " result: " << (diff >= 0 && diff <= 25) << endl;
-    return (diff >= 0 && diff <= 25);
+    // cout << " diff: " << diff << " result: " << (diff >= 0 && diff <= 25) << " guarded: " << guarded << endl;
+    
+    if (diff >= 0 && diff <= 25 && !guarded)
+        return true;
+    else {
+        guarded = true;
+        return false;
+    }
 }
 
 
@@ -82,53 +98,53 @@ bool is_oponnet(int character, int offset) {
 //        1 -- Black king
 // The function will check if there is oponnet's (r)ook, (b)ishop, (q)ueen, (k)ing nearby.
 bool Board::check_rbqk(int which_king) {
-    int row, col, offset;
+    int row, col;
     if (which_king == 0) {
         tie(row, col) = white_king;
-        offset = 'a';
     } else {
         tie(row, col) = black_king;
-        offset = 'A';
     }
 
+    int i, r, c;
+    bool guarded;
     // Checking row...
-    for (int i = 0; i < col; ++i) {
-        cout << "row: " << row << " col: " << i << " char: " << data[row][i];
-        if (is_oponnet(data[row][i], offset)) return true;
+    for (i = col - 1, guarded = false; i >= 0; --i) {
+        // cout << "row: " << row << " col: " << i << " char: " << data[row][i];
+        if (is_under_check(data[row][i], which_king, guarded)) return true;
     }
-    for (int i = col + 1; i < 8; ++i) {
-        cout << "row: " << row << " col: " << i << " char: " << data[row][i];
-        if (is_oponnet(data[row][i], offset)) return true;
+    for (i = col + 1, guarded = false; i < 8; ++i) {
+        // cout << "row: " << row << " col: " << i << " char: " << data[row][i];
+        if (is_under_check(data[row][i], which_king, guarded)) return true;
     }
 
     // Checking column...
-    for (int i = 0; i < row; ++i) {
-        cout << "row: " << i << " col: " << col << " char: " << data[i][col];
-        if (is_oponnet(data[i][col], offset)) return true;
+    for (i = row - 1, guarded = false; i >= 0; --i) {
+        // cout << "row: " << i << " col: " << col << " char: " << data[i][col];
+        if (is_under_check(data[i][col], which_king, guarded)) return true;
     }
-    for (int i = row + 1; i < 8; ++i) {
-        cout << "row: " << i << " col: " << col << " char: " << data[i][col];
-        if (is_oponnet(data[i][col], offset)) return true;
+    for (i = row + 1, guarded = false; i < 8; ++i) {
+        // cout << "row: " << i << " col: " << col << " char: " << data[i][col];
+        if (is_under_check(data[i][col], which_king, guarded)) return true;
     }
 
     // Checking left-right diagonal...
-    for (int r = row - 1, c = col - 1; r >= 0 && c >= 0; --r, --c) {
-        cout << "row: " << r << " col: " << c << " char: " << data[r][c];
-        if (is_oponnet(data[r][c], offset)) return true;
+    for (r = row - 1, c = col - 1, guarded = false; r >= 0 && c >= 0; --r, --c) {
+        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+        if (is_under_check(data[r][c], which_king, guarded)) return true;
     }
-    for (int r = row + 1, c = col + 1; r < 8 && c < 8; ++r, ++c) {
-        cout << "row: " << r << " col: " << c << " char: " << data[r][c];
-        if (is_oponnet(data[r][c], offset)) return true;
+    for (r = row + 1, c = col + 1, guarded = false; r < 8 && c < 8; ++r, ++c) {
+        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+        if (is_under_check(data[r][c], which_king, guarded)) return true;
     }
 
     // Checking right-left diagonal...
-    for (int r = row - 1, c = col + 1; r >= 0 && c < 8; --r, ++c) {
-        cout << "row: " << r << " col: " << c << " char: " << data[r][c];
-        if (is_oponnet(data[r][c], offset)) return true;
+    for (r = row - 1, c = col + 1, guarded = false; r >= 0 && c < 8; --r, ++c) {
+        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+        if (is_under_check(data[r][c], which_king, guarded)) return true;
     }
-    for (int r = row + 1, c = col - 1; r < 8 && c >= 0; ++r, --c) {
-        cout << "row: " << r << " col: " << c << " char: " << data[r][c];
-        if (is_oponnet(data[r][c], offset)) return true;
+    for (r = row + 1, c = col - 1, guarded = false; r < 8 && c >= 0; ++r, --c) {
+        // cout << "row: " << r << " col: " << c << " char: " << data[r][c];
+        if (is_under_check(data[r][c], which_king, guarded)) return true;
     }
 
 
@@ -143,25 +159,28 @@ int main() {
 
     string line;
     Board *b = new Board();
+    int gameNum = 0;
     while (true) {
 
         getline(cin, line);
-
-        b->data.push_back(vector<char>(line.begin(), line.end()));
-        b->line++;
-
-        // We've read an empty board, the program should terminate.
-        if (b->line == 8 && b->empty()) {
-            break;
+        if (line != "") {
+            b->data.push_back(vector<char>(line.begin(), line.end()));
+            b->line++;
         }
+        else {
 
-        // Empty line indicates end of board
-        if ( line.empty() ) {
+            // We've read an empty board, the program should terminate.
+            if (b->line == 8 && b->empty()) {
+                break;
+            }
 
             // Detect king' locations
             b->find_kings();
 
-            cout << *b << endl;
+            // cout << *b << endl;
+
+            gameNum++;
+            cout << "Game #" << gameNum << ": ";
 
             // Do comparison
             if (b->check_rbqk(1)) {
