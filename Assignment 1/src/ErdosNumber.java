@@ -5,16 +5,26 @@ import java.util.*;
 
 /**
  * Created by yilunq on 12/01/18.
+ *
+ * Sample Input
+ * 1
+ * 4 3
+ * Smith, M.N., Martin, G., Erdos, P.: Newtonian forms of prime factor matrices
+ * Erdos, P., Reisig, W.: Stuttering in petri nets
+ * Smith, M.N., Chen, X.: First oder derivates in structured programming
+ * Jablonski, T., Hsueh, Z.: Selfstabilizing data structures
+ * Smith, M.N.
+ * Hsueh, Z.
+ * Chen, X.
+ * Sample Output
+ * Scenario 1
+ * Smith, M.N. 1
+ * Hsueh, Z. infinity
+ * Chen, X. 2
  */
+
 public class ErdosNumber {
     public static void main(String[] args) throws IOException {
-//        int nameSize = 2;
-//        String[] names = new String[nameSize];
-//
-//        names[0] = "Smith, M.N.";
-//        names[1] = "Hsueh, Z";
-//        names[1] = "Chen, X.";
-
         Map<String, Set<String>> graph = new HashMap<>();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,18 +32,20 @@ public class ErdosNumber {
         int scenarios = Integer.parseInt(line);
         for(int scenario = 0; scenario < scenarios; ++scenario) {
             System.out.println("Scenario " + (scenario + 1));
-            String[] parts = br.readLine().trim().split("\\s+");
+            String input = br.readLine().trim();
+            while (input.length() == 0) {
+                input = br.readLine().trim();
+            }
+            String[] parts = input.split("\\s+");
             int P = Integer.parseInt(parts[0].trim());
             int N = Integer.parseInt(parts[1].trim());
 
             for(int p = 0; p < P; ++p) {
-                // 解析paper的构成
                 parts = br.readLine().trim().split("\\.[,\\:]");
                 for (int i = 0; i < parts.length; i++) {
                     parts[i] = parts[i].trim() + ".";
                 }
 
-                // 构建图
                 initialGraph(graph, parts);
             }
 
@@ -42,67 +54,53 @@ public class ErdosNumber {
                 inputNames[n] = br.readLine().trim();
             }
 
-//            System.out.println(Arrays.toString(inputNames));
+            Map<String,Integer> result = bfs(graph);
 
-            findErdosNumber(graph, inputNames);
-        }
-    }
-
-
-    private static int findErdosNumber(Map<String, Set<String>> graph, String[] names) {
-        for (int i = 0; i < names.length; i++) {
-            int result = bfs(names[i], graph);
-            if (result == -1) {
-                System.out.println(names[i] + " infinity");
-            } else {
-                System.out.println(names[i] + " "+ result);
+            for (String name : inputNames) {
+                if (result.get(name) == null) {
+                    System.out.println(name + " infinity");
+                } else {
+                    System.out.println(name + " "+ result.get(name));
+                }
             }
-
-//            System.out.println("*****");
         }
-
-        return -1;
     }
 
-    private static int bfs(String name, Map<String, Set<String>> graph) {
+    private static Map<String,Integer> bfs(Map<String, Set<String>> graph) {
+        Map<String, Integer> result = new HashMap<>();
+        result.put("Erdos, P.", 0);
+
         Queue<String> queue = new LinkedList<>();
-        queue.offer(name);
+        queue.offer("Erdos, P.");
         int edrosNumber = 0;
 
         Set<String> visited = new HashSet<>();
 
         while (!queue.isEmpty()) {
-            if (edrosNumber > graph.size()) {
-                return -1;
-            }
             edrosNumber++;
-
             int size = queue.size();
             for (int i = 0; i < size; i++) {
                 String head = queue.poll();
                 visited.add(head);
-                // 若不存在图中
                 if (graph.get(head) == null) {
                     break;
                 }
 
                 for (String neighbor : graph.get(head)) {
-                    if (neighbor.equals("Erdos, P.")) {
-                        return edrosNumber;
-                    }
-                    if (visited.contains(neighbor)) {
+                    if (result.containsKey((neighbor))) {
                         continue;
+                    } else {
+                        queue.offer(neighbor);
+                        result.put(neighbor, edrosNumber);
                     }
-                    queue.offer(neighbor);
-//                    System.out.println(neighbor);
                 }
             }
         }
-        return -1;
+        return result;
     }
 
     private static void initialGraph(Map<String, Set<String>> graph,
-                              String[] papers) {
+                                     String[] papers) {
         // add other's names to its Set
         for (String author : papers) {
             if (!graph.containsKey(author)) {
