@@ -26,7 +26,7 @@ public:
     void find_kings();
     bool check_board(int);
     bool is_under_check(int which_king, int& blocked, 
-                        int king_row, int king_col, int piece_row, int piece_col);
+                        int king_row, int king_col, int piece_row, int piece_col, bool knight_result_check);
 };
 
 
@@ -73,11 +73,12 @@ void Board::find_kings() {
 }
 
 
-// Param which_king: 0 -- White king
-//                   1 -- Black king
+// Param which_king: 0 -- White king -- uK
+//                   1 -- Black king -- lk
+// 
 // The bool variable "guarded" will be updated if we see a self piece along the way
 bool Board::is_under_check(int which_king, int& blocked, 
-                    int king_row, int king_col, int piece_row, int piece_col) {
+                    int king_row, int king_col, int piece_row, int piece_col, bool knight_result_check) {
 
     // Account for vector index out of bound
     if (piece_row < 0 || piece_row > 7 || piece_col < 0 || piece_col > 7) {
@@ -98,7 +99,7 @@ bool Board::is_under_check(int which_king, int& blocked,
     
     // cout << " diff: " << diff << " result: " << (diff >= 0 && diff <= 25) << " blocked: " << blocked << endl;
     
-    if (diff >= 0 && diff <= 25 && (character == 'n' || character == 'N')) {
+    if (knight_result_check == false && diff >= 0 && diff <= 25 && (character == 'n' || character == 'N')) {
         return true;
     }
     else if (diff >= 0 && diff <= 25 && blocked == 0) {
@@ -107,28 +108,45 @@ bool Board::is_under_check(int which_king, int& blocked,
             blocked = 1;
             return false;
         }
+        // p-----------------------------------------------------------------------------------
+        // OK - p is too far
         else if ( (character == 'p' || character == 'P') &&
              (abs(king_col - piece_col) > 1 || abs(king_row - piece_row) > 1) ) {
             blocked = 1;
             return false;
         }
+
+        // OK white king, black p going down
         else if ( (character == 'p' && which_king == 0) && 
-             (abs(piece_col - king_col) != 1 || piece_row - king_row == 1 || piece_row - king_row == 0) ) {
+             (abs(piece_col - king_col) != 1/*ok*/ || piece_row - king_row != -1 /*??  != -1  */) ) {
             blocked = 1;
             return false;
         }
+
+        // OK black king, white p going up
         else if ( (character == 'P' && which_king == 1) && 
-             (abs(piece_col - king_col) != 1 || piece_row - king_row == -1 || piece_row - king_row == 0) ) {
+             (abs(piece_col - king_col) != 1 || piece_row - king_row != 1 ) ) {
             blocked = 1;
             return false;
         }
+
+        // b-----------------------------------------------------------------------------------
+        //OK
         else if ( (character == 'b' || character == 'B') && 
              (abs(king_col - piece_col) == 0 || abs(king_row - piece_row) == 0) ) {
             blocked = 1;
             return false;
         }
+
+        // r-----------------------------------------------------------------------------------
+        //ok
         else if ( (character == 'r' || character == 'R') && 
              (abs(king_col - piece_col) != 0 && abs(king_row - piece_row) != 0) ) {
+            blocked = 1;
+            return false;
+        }
+
+        else if ( character == 'n' || character == 'N') {
             blocked = 1;
             return false;
         }
@@ -154,15 +172,17 @@ bool Board::check_board(int which_king) {
     }
 
     int blocked = -1;
+    bool knight_result_check = false;
     bool knight_result =
-           is_under_check(which_king, blocked, row, col, row + 1, col - 2) ||
-           is_under_check(which_king, blocked, row, col, row - 1, col - 2) ||
-           is_under_check(which_king, blocked, row, col, row + 1, col + 2) ||
-           is_under_check(which_king, blocked, row, col, row - 1, col + 2) ||
-           is_under_check(which_king, blocked, row, col, row + 2, col - 1) ||
-           is_under_check(which_king, blocked, row, col, row - 2, col - 1) ||
-           is_under_check(which_king, blocked, row, col, row + 2, col + 1) ||
-           is_under_check(which_king, blocked, row, col, row - 2, col + 1);
+           is_under_check(which_king, blocked, row, col, row + 1, col - 2, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row - 1, col - 2, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row + 1, col + 2, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row - 1, col + 2, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row + 2, col - 1, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row - 2, col - 1, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row + 2, col + 1, knight_result_check) ||
+           is_under_check(which_king, blocked, row, col, row - 2, col + 1, knight_result_check);
+    knight_result_check = true;
     if (knight_result) 
         return true;
 
@@ -170,34 +190,34 @@ bool Board::check_board(int which_king) {
 
     // Checking row...
     for (i = col - 1, blocked = 0; i >= 0 && !blocked; --i) {
-        if (is_under_check(which_king, blocked, row, col, row, i)) return true;
+        if (is_under_check(which_king, blocked, row, col, row, i, knight_result_check)) return true;
     }
     for (i = col + 1, blocked = 0; i < 8 && !blocked; ++i) {
-        if (is_under_check(which_king, blocked, row, col, row, i)) return true;
+        if (is_under_check(which_king, blocked, row, col, row, i, knight_result_check)) return true;
     }
 
     // Checking column...
     for (i = row - 1, blocked = 0; i >= 0 && !blocked; --i) {
-        if (is_under_check(which_king, blocked, row, col, i, col)) return true;
+        if (is_under_check(which_king, blocked, row, col, i, col, knight_result_check)) return true;
     }
     for (i = row + 1, blocked = 0; i < 8 && !blocked; ++i) {
-        if (is_under_check(which_king, blocked, row, col, i, col)) return true;
+        if (is_under_check(which_king, blocked, row, col, i, col, knight_result_check)) return true;
     }
 
     // Checking left-right diagonal...
     for (r = row - 1, c = col - 1, blocked = 0; r >= 0 && c >= 0 && !blocked; --r, --c) {
-        if (is_under_check(which_king, blocked, row, col, r, c)) return true;
+        if (is_under_check(which_king, blocked, row, col, r, c, knight_result_check)) return true;
     }
     for (r = row + 1, c = col + 1, blocked = 0; r < 8 && c < 8 && !blocked; ++r, ++c) {
-        if (is_under_check(which_king, blocked, row, col, r, c)) return true;
+        if (is_under_check(which_king, blocked, row, col, r, c, knight_result_check)) return true;
     }
 
     // Checking right-left diagonal...
     for (r = row - 1, c = col + 1, blocked = 0; r >= 0 && c < 8 && !blocked; --r, ++c) {
-        if (is_under_check(which_king, blocked, row, col, r, c)) return true;
+        if (is_under_check(which_king, blocked, row, col, r, c, knight_result_check)) return true;
     }
     for (r = row + 1, c = col - 1, blocked = 0; r < 8 && c >= 0 && !blocked; ++r, --c) {
-        if (is_under_check(which_king, blocked, row, col, r, c)) return true;
+        if (is_under_check(which_king, blocked, row, col, r, c, knight_result_check)) return true;
     }
 
 
