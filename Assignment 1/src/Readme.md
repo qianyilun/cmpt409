@@ -1,3 +1,5 @@
+# FleaCircus
+
 ## Set up
 
 It was written in **C++ 5.3**. Run by command
@@ -152,9 +154,9 @@ If we get path 8542 - (1), where length = 4, then they meet at 4.
 
 ●     How to run
 
-○     Compile: $ javacMain.java
+○     Compile: $ javac Main.java
 
-○     Run: $ javaMain
+○     Run: $ java Main
 
 ●     Data Structure
 
