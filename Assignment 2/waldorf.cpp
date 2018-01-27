@@ -13,12 +13,12 @@ using namespace std;
 
 template<class T>
 ostream& operator <<(ostream& os, const vector<T>& v) {
-	os << "[ ";
-	for (const auto& i : v) {
-		os << i << ' ';
-	}
-	os << " ]" << endl;
-	return os;
+    os << "[ ";
+    for (const auto& i : v) {
+        os << i << ' ';
+    }
+    os << " ]" << endl;
+    return os;
 }
 
 
@@ -51,38 +51,38 @@ struct SuffixArray {
 
 int main() {
 
-	string row;
-	getline(cin, row);
-	int totalCase = row[0] - '0';
+    string row;
+    getline(cin, row);
+    int totalCase = row[0] - '0';
 
-	for (int caseNum = 0; caseNum < totalCase; ++caseNum) {
+    for (int caseNum = 0; caseNum < totalCase; ++caseNum) {
 
-		getline(cin, row);  // Removed the empty line at the beginning of each case
-		getline(cin, row);
+        getline(cin, row);  // Removed the empty line at the beginning of each case
+        getline(cin, row);
 
-		int rowNum = row[0] - '0'; // Processing data matrix dimension: eg. 8 11
-		vector<vector<char>> data;
+        int rowNum = row[0] - '0'; // Processing data matrix dimension: eg. 8 11
+        vector<vector<char>> data;
 
-		for (int i = 0; i < rowNum; ++i) { // Reading data matrix
-			getline(cin, row);
-			data.push_back( vector<char>(row.begin(), row.end()) );
-		}
+        for (int i = 0; i < rowNum; ++i) { // Reading data matrix
+            getline(cin, row);
+            data.push_back( vector<char>(row.begin(), row.end()) );
+        }
 
-		getline(cin, row);
-		int testWordNum = row[0] - '0';
+        getline(cin, row);
+        int testWordNum = row[0] - '0';
 
-		vector<SuffixArray> testWords;
-		for (int i = 0; i < testWordNum; ++i) {
-			getline(cin, row);
-			testWords.push_back(SuffixArray(row));
-		}
+        vector<SuffixArray> testWords;
+        for (int i = 0; i < testWordNum; ++i) {
+            getline(cin, row);
+            testWords.push_back(SuffixArray(row));
+        }
 
-		for (const auto& i : testWords) {
+        for (const auto& i : testWords) {
             vector<int> SA = i.GetSuffixArray();
-			cout << SA << endl;
-		}
-	}
+            cout << SA << endl;
+        }
+    }
 
 
-	return 0;
+    return 0;
 }
