@@ -4,6 +4,7 @@
  */
 
 #include <algorithm>
+#include <cctype>  // std::tolower
 #include <iostream>
 #include <string>
 #include <vector>
@@ -19,6 +20,15 @@ ostream& operator <<(ostream& os, const vector<T>& v) {
     }
     os << " ]" << endl;
     return os;
+}
+
+
+template<class T>
+T toLowercase(T str) {
+    transform(str.begin(), str.end(), str.begin(), 
+        [](unsigned char c) { return tolower(c); }
+    );
+    return str;
 }
 
 
@@ -60,13 +70,19 @@ int main() {
         getline(cin, row);  // Removed the empty line at the beginning of each case
         getline(cin, row);
 
-        int rowNum = row[0] - '0'; // Processing data matrix dimension: eg. 8 11
+        // Processing data matrix dimension: eg. 8 11
+        int rowNum = stoi( row.substr(0, row.find_first_of(' ')) ), 
+            colNum = stoi( row.substr(row.find_first_of(' ') + 1, string::npos) );
+        // cout << rowNum << " " << colNum;
         vector<vector<char>> data;
 
         for (int i = 0; i < rowNum; ++i) { // Reading data matrix
             getline(cin, row);
-            data.push_back( vector<char>(row.begin(), row.end()) );
+            data.push_back( toLowercase(vector<char>(row.begin(), row.end())) );
         }
+
+        cout << data << endl;
+
 
         getline(cin, row);
         int testWordNum = row[0] - '0';
@@ -74,13 +90,49 @@ int main() {
         vector<SuffixArray> testWords;
         for (int i = 0; i < testWordNum; ++i) {
             getline(cin, row);
-            testWords.push_back(SuffixArray(row));
+            testWords.push_back(SuffixArray( toLowercase(row) ));
         }
 
-        for (const auto& i : testWords) {
-            vector<int> SA = i.GetSuffixArray();
-            cout << SA << endl;
+
+        // For each test word, loop through each element in data matrix to find a match
+        for (const auto& word : testWords) {
+            vector<int> wordSA = word.GetSuffixArray();
+            
+            for (int r = 0; r < rowNum; ++r) {
+                for (int c = 0; c < colNum; ++c) {
+
+                    cout << "r = " << r << ", c = " << c << endl;
+
+                    string horizontal_right = "", horizontal_left = "";
+                    for (int i = c; i < colNum; ++i)
+                        horizontal_right += data[r][i];
+
+                    for (int i = c; i >= 0; --i)
+                        horizontal_left += data[r][i]; 
+
+                    string vertical_up = "", vertical_down = "";
+                    for (int i = r; i >= 0; --i)
+                        vertical_up += data[i][c];
+
+                    for (int i = r; i < rowNum; ++i)
+                        vertical_down += data[i][c];
+
+                    string diagonal_up = "", diagonal_down = "";
+                    for (int i = r, j = c; i >=0 && j >= 0; --i, --j)
+                        diagonal_up += data[i][j];
+
+                    for (int i = r, j = c; i < rowNum && j < colNum; ++i, ++j)
+                        diagonal_down += data[i][j];
+
+                    // cout << "horizontal_left = " << horizontal_left << ", horizontal_right = " << horizontal_right << endl
+                    //      << "vertical_up = " << vertical_up << ", vertical_down = " << vertical_down << endl
+                    //      << "diagonal_up = " << diagonal_up << ", diagonal_down = " << diagonal_down << endl << endl;
+
+                }
+            }
         }
+    
+
     }
 
 
