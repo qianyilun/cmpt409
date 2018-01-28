@@ -284,7 +284,7 @@ int main () {
 
         if(ans)
         {
-            // printf("\n%d %d\n",ans,ans_pos);
+            printf("\n%d %d\n",ans,ans_pos);
             printf("\n%.*s\n", ans, SA.str + ans_pos);
         }
         else puts("?");
