@@ -24,31 +24,31 @@ using namespace std;
 int pos[110005];
 char str[110005];
 
-struct SuffixArray {
-	const int L;
-	string s;
-	vector<vector<int> > P;
-	vector<pair<pair<int,int>,int> > M;
-	SuffixArray(const string &s) : L(s.length()), s(s), P(1, vector<int>(L, 0)), M(L) {
-	for (int i = 0; i < L; i++) P[0][i] = int(s[i]);
-	for (int skip = 1, level = 1; skip < L; skip *= 2, level++) {
-	P.push_back(vector<int>(L, 0));
-	for (int i = 0; i < L; i++)
-	M[i] = make_pair(make_pair(P[level-1][i], i + skip < L ? P[level-1][i + skip] : -1000), i);
-	sort(M.begin(), M.end());
-	for (int i = 0; i < L; i++)
-	P[level][M[i].second] = (i > 0 && M[i].first == M[i-1].first) ? P[level][M[i-1].second] : i;
-	}
-	}
-	vector<int> GetSuffixArray() { return P.back(); 
-	}
-};
+// struct SuffixArray {
+// 	const int L;
+// 	string s;
+// 	vector<vector<int> > P;
+// 	vector<pair<pair<int,int>,int> > M;
+// 	SuffixArray(const string &s) : L(s.length()), s(s), P(1, vector<int>(L, 0)), M(L) {
+// 	for (int i = 0; i < L; i++) P[0][i] = int(s[i]);
+// 	for (int skip = 1, level = 1; skip < L; skip *= 2, level++) {
+// 	P.push_back(vector<int>(L, 0));
+// 	for (int i = 0; i < L; i++)
+// 	M[i] = make_pair(make_pair(P[level-1][i], i + skip < L ? P[level-1][i + skip] : -1000), i);
+// 	sort(M.begin(), M.end());
+// 	for (int i = 0; i < L; i++)
+// 	P[level][M[i].second] = (i > 0 && M[i].first == M[i-1].first) ? P[level][M[i-1].second] : i;
+// 	}
+// 	}
+// 	vector<int> GetSuffixArray() { return P.back(); 
+// 	}
+// };
 
 struct SufArray {
     int sa[110005], h[110005];
     int bucket[110005], init[110005];
     int X[110005], Y[110005], rank[110005], height[110005];
-    bool vis[110005];
+    bool visited[111];
     int size;
     set <string> st;
 
@@ -122,9 +122,11 @@ struct SufArray {
             }
         }
 
-        for (int i = 0; i < size; i++) {
-        	cout << sa[i] << " " ;
-        }
+        // for (int i = 0; i < 16; i++) {
+        //     printf("%d\n", sa[i]);
+        //     printf("%.*s\n", 15, str + sa[i]);    
+        // }
+        
     }
 
 // https://www.hackerrank.com/topics/lcp-array
@@ -150,32 +152,24 @@ struct SufArray {
     }
 
 
-    bool check(int k, int n)
-    {
-        int cnt = 1;
-        memset(vis, 0, sizeof(vis));
-        vis[pos[sa[1]]] = 1;
-        for (int i = 1; i < size; ++i)
-        {
-            if (height[i] >= k)
-            {
-                if (pos[sa[i + 1]] != -1 && !vis[pos[sa[i + 1]]])
-                {
-                    ++cnt;
-                    vis[pos[sa[i + 1]]] = 1;
+    bool valid(int k, int n) {
+        int count = 1;
+        memset(visited, 0, sizeof(visited));
+        visited[pos[sa[1]]] = 1;
+        for (int i = 1; i < size; ++i) {
+            if (height[i] >= k) {
+                if (pos[sa[i + 1]] != -1 && !visited[pos[sa[i + 1]]]) {
+                    ++count;
+                    visited[pos[sa[i + 1]]] = 1;
                 }
-            }
-            else
-            {
-                if (cnt > n / 2)
-                {
+            } else {
+                if (count > n / 2) {
                     return 1;
                 }
-                memset(vis, 0, sizeof(vis));
-                cnt = 1;
-                if (pos[sa[i + 1]] != -1)
-                {
-                    vis[pos[sa[i + 1]]] = 1;
+                memset(visited, 0, sizeof(visited));
+                count = 1;
+                if (pos[sa[i + 1]] != -1) {
+                    visited[pos[sa[i + 1]]] = 1;
                 }
             }
         }
@@ -185,9 +179,10 @@ struct SufArray {
     void getSolution(int n) {
         int l = 1, r = size, mid;
         int answer = 0;
+        // binary search
         while (l <= r) {
             mid = (l + r) >> 1;
-            if (check(mid, n)) {
+            if (valid(mid, n)) {
                 answer = mid;
                 l = mid + 1;
             } else {
@@ -198,14 +193,14 @@ struct SufArray {
             printf("?\n");
         } else {   
             st.clear();
-            int cnt = 1;
-            memset(vis, 0, sizeof(vis));
-            vis[pos[sa[1]]] = 1;
+            int count = 1;
+            memset(visited, 0, sizeof(visited));
+            visited[pos[sa[1]]] = 1;
             for (int i = 0; i < size; ++i) {
                 if (height[i] >= answer) {
-                    if (!vis[pos[sa[i + 1]]]) {
-                        ++cnt;
-                        vis[pos[sa[i + 1]]] = 1;
+                    if (!visited[pos[sa[i + 1]]]) {
+                        ++count;
+                        visited[pos[sa[i + 1]]] = 1;
                     }
                     for (int j = sa[i + 1]; j < sa[i + 1] + answer; ++j) {
                         str[j - sa[i + 1]] = (char)init[j];
@@ -213,16 +208,16 @@ struct SufArray {
                     str[answer] = '\0';
                     st.insert(str);
                 } else if (height[i] < answer) {
-                    if (cnt > n / 2) {
+                    if (count > n / 2) {
                         set <string> :: iterator it;
                         for (it = st.begin(); it != st.end(); ++it) {
                             printf("%s\n", it -> c_str());
                         }
                     }
                     st.clear();
-                    cnt = 1;
-                    memset(vis, 0, sizeof(vis));
-                    vis[pos[sa[i + 1]]] = 1;
+                    count = 1;
+                    memset(visited, 0, sizeof(visited));
+                    visited[pos[sa[i + 1]]] = 1;
                 }
             }
         }
@@ -236,7 +231,10 @@ int main() {
 	int n;
 	bool flag = 0;
 	while (scanf("%d", &n), n) {
+
 		int temp = 0;
+
+        SA.clear();
 		int count = 0;
 		for (int i = 1; i <= n; i++) {
 			scanf("%s", str);
@@ -255,12 +253,12 @@ int main() {
 			flag = 1;
 		}
 
-		SuffixArray suffix("bobocel");
-		vector<int> v = suffix.GetSuffixArray();	
+		// SuffixArray suffix("bobocel");
+		// vector<int> v = suffix.GetSuffixArray();	
 
-		for (int i = 0; i < v.size(); i++) {
-			cout << v[i];
-		}
+		// for (int i = 0; i < v.size(); i++) {
+		// 	cout << v[i];
+		// }
 		
 		SA.getSa();
 		SA.getHeight();
