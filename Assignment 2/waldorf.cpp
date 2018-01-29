@@ -74,41 +74,72 @@ struct SuffixArray {
     }
 
     bool is_exact_match(string input, string& succeeded_word) {
-        cout << endl;
-        return binary_search(input, succeeded_word, 0, P.back().size() - 1);
-    }
-
-    bool binary_search(string input, string& succeeded_word, int begin, int end) {
-        int mid = (begin + end) / 2;
-        int str_ind = GetSuffixArray()[mid];
-        // eg. waldorf.bam -> waldorf
-        string suffix = s.substr(str_ind, string::npos);
-        string word = suffix.substr(0, suffix.find_first_of('.'));
-        string input_withSizeOfWord = input.substr(0, word.length());
-        cout << "mid: " << mid << ", begin: " << begin << ", end: " << end << endl;
-        cout << "input: " << input_withSizeOfWord << endl << "word: " << word << endl;
+        // cout << endl;
+        vector<int> sa = GetSuffixArray();
         
-        // If found a match, make sure it is not a substring of the original word by
-        // testing the whether ".word." is in the original string or not
-        if ( input_withSizeOfWord == word ) {
-            size_t pos = s.find("." + input_withSizeOfWord + ".");
-            if (pos == string::npos) {
-                return false;
-            } else {
-                succeeded_word = input_withSizeOfWord;
+        // For binary search, ind[0]: left index, ind[1]: right index
+        vector<int> ind = { 0, (int) P.back().size() - 1 };
+        
+        while (ind[0] + 1 < ind[1]) {
+            int mid = (ind[0] + ind[1]) / 2;
+            int str_ind = sa[mid];
+
+            string suffix = s.substr(str_ind, string::npos);
+            string word = suffix.substr(0, suffix.find_first_of('.'));
+
+            // cout << "mid: " << mid << ", begin: " << ind[0] << ", end: " << ind[1] << endl;
+            // cout << "input: " << input << " word: " << word << endl;
+
+            if (word == "") {
+                ind[0] = mid;
+            } else if (input == word) {
+                succeeded_word = input;
+                return true;
+            } else if (input < word) {
+                ind[1] = mid;
+            } else if (input > word) {
+                ind[0] = mid;
+            }
+        }
+
+        // left ind and right ind are adjacent now. Need to check whether the 
+        // 2 strings pointed by left/right ind consist of what we are looking for.
+        vector<string> words;
+        for (int i = ind[0]; i <= ind[1]; ++i) {
+            int str_ind = sa[i];
+
+            string suffix = s.substr(str_ind, string::npos);
+            string word = suffix.substr(0, suffix.find_first_of('.'));
+            words.push_back(word);
+        }
+        sort(words.begin(), words.end(), greater<string>());
+
+        // cout << "words: " << words << endl;
+
+        for (const auto& i : words) {
+            if (input.substr(0, i.length()) == i) {
+                // cout << "trimmed: " << input.substr(0, i.length()) << " word: " << i << endl;
+                succeeded_word = input.substr(0, i.length());
                 return true;
             }
-        } else if (input_withSizeOfWord < word && abs(begin - end) > 1) {
-            return binary_search(input, succeeded_word, 0, mid);
-        } else if (input_withSizeOfWord > word && abs(begin - end) > 1) {
-            return binary_search(input, succeeded_word, mid + 1, end);
-        } else {
-            return false;
         }
+
+        return false;
     }
 
-
 };
+
+
+void record_result(int r, int c, map<string, string>& result_map, const string& succeeded_word) {
+    stringstream ss;
+    ss << r + 1 << " " << c + 1;
+    // cout << "Found: " << r + 1 << " " << c + 1 << endl;
+
+    // Processing outputs
+    if (result_map[succeeded_word] == "") {
+        result_map[succeeded_word] = ss.str();
+    }
+}
 
 
 // ----------
@@ -117,7 +148,7 @@ int main() {
 
     string row;
     getline(cin, row);
-    int totalCase = row[0] - '0';
+    int totalCase = stoi(row);
 
     for (int caseNum = 0; caseNum < totalCase; ++caseNum) {
 
@@ -127,7 +158,7 @@ int main() {
         // Processing data matrix dimension: eg. 8 11
         int rowNum = stoi( row.substr(0, row.find_first_of(' ')) ), 
             colNum = stoi( row.substr(row.find_first_of(' ') + 1, string::npos) );
-        cout << rowNum << " " << colNum;
+        // cout << rowNum << " " << colNum;
         vector<vector<char>> data;
 
         for (int i = 0; i < rowNum; ++i) { // Reading data matrix
@@ -137,7 +168,7 @@ int main() {
 
 
         getline(cin, row);
-        int testWordNum = row[0] - '0';
+        int testWordNum = stoi(row);
 
         // In order to output results in order as the test words are inputted, we need to use a vector to 
         // store the test word input order.
@@ -152,8 +183,8 @@ int main() {
         testWord_str += ".";
 
         SuffixArray sa(testWord_str);
-        cout << sa.s << endl;
-        cout << sa.GetSuffixArray() << endl;
+        // cout << sa.s << endl;
+        // cout << sa.GetSuffixArray() << endl;
         map<string, string> result_map;
 
 
@@ -162,7 +193,12 @@ int main() {
         for (int r = 0; r < rowNum; ++r) {
             for (int c = 0; c < colNum; ++c) {
 
-                cout << "r = " << r << ", c = " << c << endl;
+                // cout << "r = " << r << ", c = " << c << endl;
+
+                string current_ch = ""; current_ch += data[r][c];
+                if (testWord_str.find("." + current_ch + ".") != string::npos) {
+                    record_result(r, c, result_map, current_ch);
+                }
 
                 string horizontal_right = "", horizontal_left = "";
                 for (int i = c; i < colNum; ++i)
@@ -178,37 +214,57 @@ int main() {
                 for (int i = r; i < rowNum; ++i)
                     vertical_down += data[i][c];
 
-                string diagonal_up = "", diagonal_down = "";
+                string diagonal_leftup = "", diagonal_rightdown = "";
                 for (int i = r, j = c; i >=0 && j >= 0; --i, --j)
-                    diagonal_up += data[i][j];
+                    diagonal_leftup += data[i][j];
 
                 for (int i = r, j = c; i < rowNum && j < colNum; ++i, ++j)
-                    diagonal_down += data[i][j];
+                    diagonal_rightdown += data[i][j];
 
-                cout << "horizontal_left = " << horizontal_left << ", horizontal_right = " << horizontal_right << endl
-                     << "vertical_up = " << vertical_up << ", vertical_down = " << vertical_down << endl
-                     << "diagonal_up = " << diagonal_up << ", diagonal_down = " << diagonal_down << endl << endl;
+                string diagonal_rightup = "", diagonal_leftdown = "";
+                for (int i = r, j = c; i >=0 && j < colNum; --i, ++j)
+                    diagonal_rightup += data[i][j];
+
+                for (int i = r, j = c; i < rowNum && j >= 0; ++i, --j)
+                    diagonal_leftdown += data[i][j];
+
+                // cout << "horizontal_left = " << horizontal_left << ", horizontal_right = " << horizontal_right << endl
+                //      << "vertical_up = " << vertical_up << ", vertical_down = " << vertical_down << endl
+                //      << "diagonal_leftup = " << diagonal_leftup << ", diagonal_rightdown = " << diagonal_rightdown << endl 
+                //      << "diagonal_rightup = " << diagonal_rightup << ", diagonal_leftdown = " << diagonal_leftdown << endl 
+                //      << endl;
+                
                 string succeeded_word = "";
-                if (
-                    sa.is_exact_match(horizontal_right, succeeded_word) ||
-                    sa.is_exact_match(horizontal_left, succeeded_word) ||
-                    sa.is_exact_match(vertical_down, succeeded_word) ||
-                    sa.is_exact_match(vertical_up, succeeded_word) ||
-                    sa.is_exact_match(diagonal_down, succeeded_word) ||
-                    sa.is_exact_match(diagonal_up, succeeded_word)
-                ) {
-                    stringstream ss;
-                    ss << r + 1 << " " << c + 1;
-
-                    // Processing outputs
-                    result_map[succeeded_word] = ss.str();
-                }
+                if (sa.is_exact_match(horizontal_right, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(horizontal_left, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(vertical_down, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(vertical_up, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(diagonal_rightdown, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(diagonal_leftup, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(diagonal_leftdown, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
+                
+                if (sa.is_exact_match(diagonal_rightup, succeeded_word) && !result_map.count(succeeded_word))
+                    record_result(r, c, result_map, succeeded_word);
 
             }
         }
 
-
+        // cout << "result: " << endl;
         for (const auto& i : testWord_vector) {
+            // cout << i << " " << result_map[i] << endl;
             cout << result_map[i] << endl;
         }
 
