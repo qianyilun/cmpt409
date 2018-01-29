@@ -189,7 +189,7 @@ int main() {
 
 
         // Loop through each element in data matrix and do binary search in suffix array to find a match
-            
+        
         for (int r = 0; r < rowNum; ++r) {
             for (int c = 0; c < colNum; ++c) {
 
@@ -200,64 +200,38 @@ int main() {
                     record_result(r, c, result_map, current_ch);
                 }
 
-                string horizontal_right = "", horizontal_left = "";
-                for (int i = c; i < colNum; ++i)
-                    horizontal_right += data[r][i];
+                vector<string> str_of_eight_directions(8);
 
-                for (int i = c; i >= 0; --i)
-                    horizontal_left += data[r][i]; 
+                for (int i = c; i < colNum; ++i) // Horizontal riht
+                    str_of_eight_directions[0] += data[r][i];
 
-                string vertical_up = "", vertical_down = "";
-                for (int i = r; i >= 0; --i)
-                    vertical_up += data[i][c];
+                for (int i = c; i >= 0; --i) // Horizontal left
+                    str_of_eight_directions[1] += data[r][i]; 
 
-                for (int i = r; i < rowNum; ++i)
-                    vertical_down += data[i][c];
+                for (int i = r; i >= 0; --i) // Vertical up
+                    str_of_eight_directions[2] += data[i][c];
 
-                string diagonal_leftup = "", diagonal_rightdown = "";
-                for (int i = r, j = c; i >=0 && j >= 0; --i, --j)
-                    diagonal_leftup += data[i][j];
+                for (int i = r; i < rowNum; ++i) // Vertical down
+                    str_of_eight_directions[3] += data[i][c];
 
-                for (int i = r, j = c; i < rowNum && j < colNum; ++i, ++j)
-                    diagonal_rightdown += data[i][j];
+                for (int i = r, j = c; i >=0 && j >= 0; --i, --j) // Diagonal left-up
+                    str_of_eight_directions[4] += data[i][j];
 
-                string diagonal_rightup = "", diagonal_leftdown = "";
-                for (int i = r, j = c; i >=0 && j < colNum; --i, ++j)
-                    diagonal_rightup += data[i][j];
+                for (int i = r, j = c; i < rowNum && j < colNum; ++i, ++j) // Diagonal right-down
+                    str_of_eight_directions[5] += data[i][j];
 
-                for (int i = r, j = c; i < rowNum && j >= 0; ++i, --j)
-                    diagonal_leftdown += data[i][j];
+                for (int i = r, j = c; i >=0 && j < colNum; --i, ++j) // Diagonal right-up
+                    str_of_eight_directions[6] += data[i][j];
 
-                // cout << "horizontal_left = " << horizontal_left << ", horizontal_right = " << horizontal_right << endl
-                //      << "vertical_up = " << vertical_up << ", vertical_down = " << vertical_down << endl
-                //      << "diagonal_leftup = " << diagonal_leftup << ", diagonal_rightdown = " << diagonal_rightdown << endl 
-                //      << "diagonal_rightup = " << diagonal_rightup << ", diagonal_leftdown = " << diagonal_leftdown << endl 
-                //      << endl;
+                for (int i = r, j = c; i < rowNum && j >= 0; ++i, --j) // Diagonal left-down
+                    str_of_eight_directions[7] += data[i][j];
+
                 
                 string succeeded_word = "";
-                if (sa.is_exact_match(horizontal_right, succeeded_word) && !result_map.count(succeeded_word))
+                for (const auto& direction : str_of_eight_directions) {
+                    if (sa.is_exact_match(direction, succeeded_word) && !result_map.count(succeeded_word))
                     record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(horizontal_left, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(vertical_down, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(vertical_up, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(diagonal_rightdown, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(diagonal_leftup, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(diagonal_leftdown, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
-                
-                if (sa.is_exact_match(diagonal_rightup, succeeded_word) && !result_map.count(succeeded_word))
-                    record_result(r, c, result_map, succeeded_word);
+                }
 
             }
         }
