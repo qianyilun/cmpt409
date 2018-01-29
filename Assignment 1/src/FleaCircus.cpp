@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 using namespace std;
-const int N = 5000;
+const int N = 5001;
 int position1, position2, path[N],pathCounter;
 vector<int> g[N];
 bool dfs(int x, int y,int parent){
@@ -43,7 +43,6 @@ int main(){
           g[b].push_back(a);
           // todo: a and b are connected, keep them somewhere
       }
-
       // in the (n+1)'th line we have the number of starting positions
       int l;
       cin >> l;
