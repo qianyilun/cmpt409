@@ -14,40 +14,36 @@
 #include <vector>
 
 using namespace std;
-int pos[110005];
+int position[110005];
 char str[110005];
 
 struct SufArray {
     int sa[110005], h[110005];
-    int bucket[110005], init[110005];
+    int temp[110005], init[110005];
     int X[110005], Y[110005], rank[110005], height[110005];
     bool visited[111];
     int size;
     set <string> hash;
 
-    void insert(int n) {
-    	init[size++] = n;
-    }
-
     bool cmp (int *r, int a, int b, int length) {
     	return (r[a] == r[b] && r[a + length] == r[b + length]);
     }
 
-    void getSa() {
+    void getSuffixArray() {
     	int m = 256;
         init[size] = 0;
         int l, p, *x = X, *y = Y, n = size + 1;
         for (int i = 0; i < m; ++i) {
-            bucket[i] = 0;
+            temp[i] = 0;
         }
         for (int i = 0; i < n; ++i) {
-            ++bucket[x[i] = init[i]];
+            ++temp[x[i] = init[i]];
         }
         for (int i = 1; i < m; ++i) {
-            bucket[i] += bucket[i - 1];
+            temp[i] += temp[i - 1];
         }
         for (int i = n - 1; i >= 0; --i) {
-            sa[--bucket[x[i]]] = i;
+            sa[--temp[x[i]]] = i;
         }
         for (l = 1, p = 1; l <= n && p < n; m = p, l *= 2) {
             p = 0;
@@ -60,16 +56,16 @@ struct SufArray {
                 }
             }
             for (int i = 0; i < m; ++i) {
-                bucket[i] = 0;
+                temp[i] = 0;
             }
             for (int i = 0; i < n; ++i) {
-                ++bucket[x[y[i]]];
+                ++temp[x[y[i]]];
             }
             for (int i = 1; i < m; ++i) {
-                bucket[i] += bucket[i - 1];
+                temp[i] += temp[i - 1];
             }
             for (int i = n - 1; i >= 0; --i) {
-                sa[--bucket[x[y[i]]]] = y[i];
+                sa[--temp[x[y[i]]]] = y[i];
             }
             int i;
             for (swap(x, y), x[sa[0]] = 0, p = 1, i = 1; i < n; ++i) {
@@ -103,25 +99,25 @@ struct SufArray {
     bool valid(int k, int n) {
         int count = 1;
         memset(visited, 0, sizeof(visited));
-        visited[pos[sa[1]]] = 1;
+        visited[position[sa[1]]] = 1;
         for (int i = 1; i < size; ++i) {
             if (height[i] >= k) {
-                if (pos[sa[i + 1]] != -1 && !visited[pos[sa[i + 1]]]) {
+                if (position[sa[i + 1]] != -1 && !visited[position[sa[i + 1]]]) {
                     ++count;
-                    visited[pos[sa[i + 1]]] = 1;
+                    visited[position[sa[i + 1]]] = 1;
                 }
             } else {
                 if (count > n / 2) {
-                    return 1;
+                    return true;
                 }
                 memset(visited, 0, sizeof(visited));
                 count = 1;
-                if (pos[sa[i + 1]] != -1) {
-                    visited[pos[sa[i + 1]]] = 1;
+                if (position[sa[i + 1]] != -1) {
+                    visited[position[sa[i + 1]]] = 1;
                 }
             }
         }
-        return 0;
+        return false;
     }
 
     void getSolution(int n) {
@@ -137,7 +133,7 @@ struct SufArray {
                 r = mid - 1;
             }
         }
-        if (!answer) {
+        if (answer == 0) {
             printf("?\n");
         } else {   
             printResults(answer, n);
@@ -148,12 +144,12 @@ struct SufArray {
         hash.clear();
         int count = 1;
         memset(visited, 0, sizeof(visited));
-        visited[pos[sa[1]]] = 1;
+        visited[position[sa[1]]] = 1;
         for (int i = 0; i < size; ++i) {
             if (height[i] >= answer) {
-                if (!visited[pos[sa[i + 1]]]) {
+                if (!visited[position[sa[i + 1]]]) {
                     ++count;
-                    visited[pos[sa[i + 1]]] = 1;
+                    visited[position[sa[i + 1]]] = 1;
                 }
                 for (int j = sa[i + 1]; j < sa[i + 1] + answer; ++j) {
                     str[j - sa[i + 1]] = (char)init[j];
@@ -170,7 +166,7 @@ struct SufArray {
                 hash.clear();
                 count = 1;
                 memset(visited, 0, sizeof(visited));
-                visited[pos[sa[i + 1]]] = 1;
+                visited[position[sa[i + 1]]] = 1;
             }
         }
     }
@@ -182,21 +178,19 @@ int main() {
 	int n;
 	bool flag = 0;
 	while (scanf("%d", &n), n) {
-
 		int temp = 0;
-
 		SA.size = 0;
 		int count = 0;
 		for (int i = 1; i <= n; i++) {
 			scanf("%s", str);
 			int length = strlen(str);
 			for (int j = 0; j < length; j++) {
-				SA.insert((int) str[j]);
+                SA.init[SA.size++] = (int) str[j]; 
 				temp = max(temp, (int) str[j]);
-				pos[count++] = i;
+				position[count++] = i;
 			}
-			SA.insert((int) ('z') + i);
-			pos[count++] = -1;
+            SA.init[SA.size++] = (int) ('z') + i; 
+			position[count++] = -1;
 		}
 		if (flag) {
 			printf("\n");
@@ -204,7 +198,7 @@ int main() {
 			flag = 1;
 		}
 
-		SA.getSa();
+		SA.getSuffixArray();
 		SA.getHeight();
 		SA.getSolution(n);
 	}
