@@ -25,10 +25,6 @@ struct SufArray {
     int size;
     set <string> hash;
 
-    void clear() {
-        size = 0;
-    }
-    
     void insert(int n) {
     	init[size++] = n;
     }
@@ -189,7 +185,7 @@ int main() {
 
 		int temp = 0;
 
-        SA.clear();
+		SA.size = 0;
 		int count = 0;
 		for (int i = 1; i <= n; i++) {
 			scanf("%s", str);
