@@ -1,4 +1,4 @@
-# 10271 chopsticks
+# 10271 Chopsticks
 
 ## Set up
 
@@ -8,11 +8,11 @@ It was written in **C++ 11**. Run by command
 
 It has been accepted by Uva.
 
-# Observation
+## Observation
 
 * In a set {A,B,C}, A,B must be adajent (assuming all chopsticks are sorted by length)
 
-# Algorithm overview
+## Algorithm overview
 
 
 
@@ -26,7 +26,7 @@ It has been accepted by Uva.
       * M\[chop][people] = M\[chop-1][people]
 * To satifsy the existence of C, chop >= people*3
 
-# Thought process about finding C
+## Thought process about finding C
 
 * To determine whether there is a C is tricky.
   * For some test case M\[N][K] is solution but for some are M\[N-2][K]
@@ -36,7 +36,7 @@ It has been accepted by Uva.
   * In this way a C for each set/people is guaranteed.
 
 
-# 10069
+# 10069 Distinct Subsequences
 
 ## Set up
 
@@ -47,7 +47,7 @@ Then run by command ``java Main``.
 
 It has been accepted by Uva.
 
-# Observation
+## Observation
 
 The question is to find the same subsequence in a given sequence. As we can see, it is not necessary for
 indices of sequence to ensure all letters are continously, but must be in the increasing order to
@@ -57,7 +57,7 @@ consist to the subsequence.
 In addition, the question is to count the number of occurrences and which indicates it is high possibility to
 use dynamic programming to decrease the complexity.
 
-# Algorithm overview
+## Algorithm overview
 
 I treat X as a "sequence", and Z as a "subsequence".
 
@@ -73,7 +73,7 @@ Formally,
 `` if X[i] != Z[j], dp[i][j] = dp[i-1][j];``
 
 
-# Data structure and Speical library
+## Data structure and Speical library
 
 * Static 2D array of BigInteger
 * BigInteger object and its methods and fields
