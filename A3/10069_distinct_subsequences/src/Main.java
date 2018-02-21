@@ -30,7 +30,7 @@ public class Main {
             x = X.length();
             z = Z.length();
             initialize();
-            System.out.println(solve() + "\n");
+            System.out.println(solve());
         }
     }
 
