@@ -80,3 +80,24 @@ Formally,
   * BigInteger.One;
   * BigInteger.Zero;
   * BigInteger	add(BigInteger val);
+
+
+# 116 Undirectional TSP
+
+## Set up
+
+The program is written using C++ with `c++11` standard. Compile the program by using the command `g++ -std=c++11 116.cpp`.
+
+## How it works
+
+* The program starts by reading the dimensions, user input data and stores the data matrix in an $m \times n$ 2-dimentional vector. 
+
+* In order to find the smallest weight along the path, there are _**m**_ posibilities to choose from the first column. The program starts by calling the recursive function `get_min(int row, int col)` with row from 1 to _m_ and column equals to 0 indicating that the program starts looking from the first column.
+
+* The function `get_min(int row, int col)` will then recursively call itself to find out the weight for the cases where we choose to go east, northeast and southeast. After we have 3 weights, we can determine which is the smallest weight and mark that tile as part of out path by adding the current row number to the path vector returned by the previous recursive function. 
+
+* The recursive process continues until we hit the very last row. The program will return the pair of weight 0 and an empty path vector. 
+
+* At the end of therecursive process, we will know each of the weights and paths if we choose to go through the _m_ posibilities. We then choose the smallest weight and the corresponding path as the final answer.
+
+**Note:** During the recursive process, we need to have a map implementing the functionality of memoization with key that stores the (x, y) coordinates and value that stores the pair of total weight summing from the current coordinate until the right most tile and a vector denoting a path.
