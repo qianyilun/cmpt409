@@ -114,6 +114,8 @@ The program is written using C++ with `c++11` standard. Compile the program by u
 
 The program is written using C++ with `c++11` standard. Compile the program by using the command `g++ -std=c++11 1122.cpp`
 
+Result in Uva is "Time limit exceeded", we believe we have the correct dp set up and algorithm but we are missing one of two implementation "trick".
+
 # Algorithm and dp set up
 
 * A tree structure should be appiled from observations as follows:
