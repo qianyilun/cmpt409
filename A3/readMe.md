@@ -96,11 +96,11 @@ The program is written using C++ with `c++11` standard. Compile the program by u
 
 * The program starts by reading the dimensions, user input data and stores the data matrix in an $m \times n$ 2-dimentional vector. 
 
-* In order to find the smallest weight along the path, there are _**m**_ posibilities to choose from the first column. The program starts by calling the recursive function `get_min(int row, int col)` with row from 1 to _m_ and column equals to 0 indicating that the program starts looking from the first column.
+* In order to find the smallest weight along the path, there are _**m**_ posibilities to choose from the first column. The program starts by calling the recursive function `get_min(int row, int col)` with row from 1 to _m_ and column equals to 0 indicating that the program starts looking from the first column (i.e. the solusion would be `min{ get_min(1, 0), get_min(2, 0), ... , get_min(m, 0) }`).
 
-* The function `get_min(int row, int col)` will then recursively call itself to find out the weight for the cases where we choose to go east, northeast and southeast. After we have 3 weights, we can determine which is the smallest weight and mark that tile as part of out path by adding the current row number to the path vector returned by the previous recursive function. 
+* Following the recursive rule `get_min(row, col) = min{ get_min(row + 1, col + 1), get_min(row, col + 1), get_min(row - 1, col + 1) }`, the function will then recursively call itself to find out the weight for the cases where we choose to go east, northeast and southeast. After we have 3 weights, we can determine which is the smallest weight and mark that tile as part of out path by adding the current row number to the path vector returned by the previous recursive function. 
 
-* The recursive process continues until we hit the very last row. The program will return the pair of weight 0 and an empty path vector. 
+* The recursive process continues until we hit the very last row (i.e. when `col > input_column`). The program will return the pair of weight 0 and an empty path vector. 
 
 * At the end of therecursive process, we will know each of the weights and paths if we choose to go through the _m_ posibilities. We then choose the smallest weight and the corresponding path as the final answer.
 
