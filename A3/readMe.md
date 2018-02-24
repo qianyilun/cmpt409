@@ -36,6 +36,8 @@ It has been accepted by Uva.
   * In this way a C for each set/people is guaranteed.
 
 
+
+
 # 10069 Distinct Subsequences
 
 ## Set up
@@ -79,7 +81,9 @@ Formally,
 * BigInteger object and its methods and fields
   * BigInteger.One;
   * BigInteger.Zero;
-  * BigInteger	add(BigInteger val);
+  	 BigInteger	add(BigInteger val);
+
+
 
 
 # 116 Undirectional TSP
@@ -101,3 +105,43 @@ The program is written using C++ with `c++11` standard. Compile the program by u
 * At the end of therecursive process, we will know each of the weights and paths if we choose to go through the _m_ posibilities. We then choose the smallest weight and the corresponding path as the final answer.
 
 **Note:** During the recursive process, we need to have a map implementing the functionality of memoization with key that stores the (x, y) coordinates and value that stores the pair of total weight summing from the current coordinate until the right most tile and a vector denoting a path.
+
+
+
+# 1222 Bribing FIPA
+
+## Set up
+
+The program is written using C++ with `c++11` standard. Compile the program by using the command `g++ -std=c++11 1122.cpp`
+
+# Algorithm and dp set up
+
+* A tree structure should be appiled from observations as follows:
+  * n,m is quite small (200), making DFS, a common way to fill DP-tree possible
+  * We can see a clear tree structure from the domination relation between countries.
+* Transfer function:
+  - **dp\[u][j] = min(dp\[u][j], dp\[u][j-k]+dp\[v][k]);**
+  - Get dp's value from its children
+* Use a 2d table to build a tree
+  * Root node is a node to connect all countries
+  * All countries are at the second level
+  * Country under domination are child
+    * for example
+      * Aland is Boland's child so 
+        * dp\[Boland][1] = Boland
+        * dp\[Boland][2] = Aland
+
+# Why we fail
+
+* Input is very complicated 
+  * Countries' name are raw string so when we are trying to use it as dp table index we need to index it first
+  * **Maintaining additional map to map the country name to ID add complexity to implementation**
+  * For each line there is no number of children at hand
+  * "#" set up is quite stupid
+* Detail in dp implementation is complicated too
+  * we believe we have the correct dp set and algorithm but we are missing one or two detail in implementation
+  * Details we covered
+    * Set infinity value to a value that can be added up without overflow cause INF+INF would happened
+    * Init cost[0] to INF
+    * Final result should be minimum value in dp\[i][j] for all j > m
+
