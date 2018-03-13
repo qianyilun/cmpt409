@@ -11,6 +11,7 @@ bool visited[8][8];
 // The following are used to store the 1~3 checkpoints and (0, 1) being the final point to reach
 int cp1_x, cp1_y, cp2_x, cp2_y, cp3_x, cp3_y, cp4_x, cp4_y, finalcp_x = 0, finalcp_y = 1;
 int row, col;
+int totalsteps;
 
 inline int manhattan(int x1, int y1, int x2, int y2) {
     return abs(x1 - x2) + abs(y1 - y2);
@@ -40,8 +41,6 @@ inline bool checkCondition(int x, int y, Direction d) {
 }
 
 int dfs(int step, int i, int j) {
-    int totalsteps = row * col;
-
     // /* Prunning */
     // If we haven't reached the specified steps for checkpoints but checkpoints have been visited, stop.
     if (step < totalsteps/4 && visited[cp1_x][cp1_y]) return 0;
@@ -87,7 +86,7 @@ int dfs(int step, int i, int j) {
         visited[i][j + 1] = false;
     }
     return soln;
-    }
+}
 
 int main() {
     int cases = 1;
@@ -95,6 +94,8 @@ int main() {
     scanf("%d %d\n", &row, &col);
     if (row == 0 && col == 0)
         return 0;
+
+    totalsteps = row * col;
 
     scanf("%d %d %d %d %d %d\n", &cp1_x, &cp1_y, &cp2_x, &cp2_y, &cp3_x, &cp3_y);
 
