@@ -26,3 +26,27 @@ It has been accepted by Uva.
 ``` DP[j] = DP[j] ∨ (DP[j − weight[i]] << 1LL) ```
 * ```vector<int>``` to store all persons' weight.
 * ```long long``` as DP array type.
+
+---
+
+
+
+# Constrained Circular permutation
+
+## Set up
+
+It was written in C++. It was accepted by ACM-ICPC.
+
+## Algorithm Overview
+
+Fix 1 on top of the clock. Then fix element on the left of 1 and element on the right of 1. Now we only consider the rest n-3 elements. DFS can be appiled recursivly to count the total valid permutation.
+
+## Detail
+
+* Let's mark the top 3 element c[1], c[n], c[2] as ABC
+  * We have A = 1, A < B < C
+  * Then when we have A < C < B repeated permutations. So we can ignore this case. 
+* DFS only need to increment total count when we hit the last element because we are counting the total permutation not number of triplets in a permutation.
+
+---
+
