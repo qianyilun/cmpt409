@@ -50,3 +50,40 @@ Fix 1 on top of the clock. Then fix element on the left of 1 and element on the 
 
 ---
 
+# Carmichael
+
+## Set up
+
+It was written in C++ and it was accepted by UVa.
+
+## Algorithm Overview
+
+* The number indicated in the problem is too big to calculate directly. 
+* We need to use the algorithm indicated in slide #14 of Number Theory to recursively calculate the exponent for Femat test.
+* Other than that, we need to use a correct primarity test to determine whether the number is prime or not. We've used looping from 2 to `sqrt(N)` in this question. 
+* Once we have the result, we can determine whether it is a Carmichael number because Carmichael number is not prime and passes all the Femat tests.
+* We can combine the results of the previous 2 points to make a decision.
+
+
+---
+
+# Robot On Ice
+
+## Set up
+
+It was written in C++ and it was accepted by UVa.
+
+## Algorithm Overview
+
+* It is easy to fine a naive aproach for this problem. 
+    * Just start from the coordinate (0, 0) and see at each point, whether we can go left, right, top or bottom and create a recursive call of we can do so. 
+    * This way we've been generating all the paths that starts from (0, 0).
+    * And then we can filter out paths that end with (0, 1) and goes through the 3 checkpoints calculated.
+* However, this naive approach is too slow to work with a grid plane with 8 rows and 8 columns.
+* In order to accelarate the search, we need to do pruning.
+    1. We can check if we are at the 1/4, 1/2 and 3/4 steps of the execution. If indeed we are, and we are not at the checkpoints, that means the path we are walking is wrong and we stop the search.
+    2. We can also check whether we are currently at the checkpoints. If we are, and we are not at the desired steps, stop the search of the current path because it is not a valid path as well.
+    3. Another check would be to calculate Manhattan distance between the current point we are at and one of the checkpoint. If the distance is too large, meaning that the point is taking larger than the desired steps to go to, then we can stop the search.
+    4. If a move results in disconnection of the grid plane, we can also stop the search because disconnection means some of the points will never be visited if we are going the current path. This is not acceptable as we need to visit every tile according to the question.
+* After lots of such pruning, we can use the original algorithm to generate paths and keep the count number updated.
+* Report the count number after the search.
