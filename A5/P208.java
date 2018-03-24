@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -43,12 +44,12 @@ class Graph {
         //Call recursive utility
         constructAllPathsUtil(s, d, isVisited, pathList);
         
-        Collections.sort(pathsResultList, new Comparator<List<Integer>>() {
-        	@Override
-        	public int compare(List<Integer> a, List<Integer> b) {
-        		return a.compareTo(b);
-        	}
-		});
+//        Collections.sort(pathsResultList, new Comparator<List<Integer>>() {
+//        	@Override
+//        	public int compare(List<Integer> a, List<Integer> b) {
+//        		
+//        	}
+//		});
         
         
         for (List<Integer> path : pathsResultList) {
@@ -140,6 +141,10 @@ public class P208 {
 		        	}
 		        	String[] line_split = line.split(" ");
 		        	g.addEdge(Integer.parseInt(line_split[0]), Integer.parseInt(line_split[1]));
+		        }
+		        
+		        for (List<Integer> l : g.adjList) {
+		        	Collections.sort(l);
 		        }
 		        
 		        System.out.printf("CASE %d:\n", cases);
