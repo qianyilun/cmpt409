@@ -22,7 +22,7 @@ Assume we can treat each beads as an undirected edge by connecting two vertices.
 
 It was written in **C++ 11**. Run by command
 
-``g++ -lm -lcrypt -O2 -pipe -DONLINE_JUDGE``
+``g++ -std=c++11 -lm -lcrypt -O2 -pipe -DONLINE_JUDGE``
 
 It has been accepted by Uva.
 
