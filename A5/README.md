@@ -16,3 +16,32 @@ Assume we can treat each beads as an undirected edge by connecting two vertices.
 ---
 
 
+
+---
+
+# 10147 Highways
+
+## Set up
+
+It was written in **C++ **. Run by command
+
+``g++ -lm -lcrypt -O2 -pipe -DONLINE_JUDGE``
+
+It has been accepted by Uva.
+
+**Graph building and MST algorithm was copied from code book**
+
+## Algorithm Overview
+
+* Built a graph
+* **For existing highways, distance(cost) is 0**
+* Find MST
+  * Use kruskal
+
+## Trick
+
+* Use inline for calculating distance
+* skip "sqrt" in distance since we are only comparing distance, sqrt is useless
+
+---
+
