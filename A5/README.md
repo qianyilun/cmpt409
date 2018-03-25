@@ -16,13 +16,11 @@ Assume we can treat each beads as an undirected edge by connecting two vertices.
 
 
 
----
-
 # 10147 Highways
 
 ## Set up
 
-It was written in **C++ **. Run by command
+It was written in **C++ 11**. Run by command
 
 ``g++ -lm -lcrypt -O2 -pipe -DONLINE_JUDGE``
 
