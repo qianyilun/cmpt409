@@ -42,3 +42,44 @@ It has been accepted by Uva.
 
 ---
 
+# 589 Pushing Boxes
+
+## Set up
+
+It was written in **C++ 11**. Run by command
+
+``g++ -std=c++11 -lm -lcrypt -O2 -pipe -DONLINE_JUDGE``
+
+It has been accepted by Uva.
+
+**BFS algorithm used in this problem is copied from code book.**
+
+## Algorithm Overview
+
+* Read in the user input and put them into a 2D array which acts as a "maze". Also record the starting point of user, the box and the end point of the box.
+* Start the BFS process for the box from the starting point location.
+  * Inside the box's BFS process, we need to do BFS for the person to ensure that the person can reach the box. 
+  * We will check whether the box can be moved to 4 directions: up, down, left and right.
+
+---
+
+# 208 Fire Truck
+
+## Set up
+
+It was written in **Java**. Compile by command
+
+`javac P208.java`
+
+It has been accepted by Uva.
+
+**If you submit our Java source code to UVa, please change the class name which contains the main function to `'Main'`, otherwise UVa will report compilation error.**
+
+**BFS and DFS algorithm used in this problem is copied from code book.**
+
+## Algorithm Overview
+
+* Read in user input and construct a graph containing cities connected.
+* Apply BFS to the graph to check whether the destination is connected to 1. This check will eliminate the effort to generate a path to the destinations where there is no way to go to from the source vertex 1.
+* After we found out that the given destination is connected to vertex 1, we can apply DFS with source 1 and the given destination to generate a path.
+* After that, we can output the path or "No route to destination" based on the path result returned from previous step.
