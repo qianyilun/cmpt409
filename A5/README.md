@@ -10,7 +10,7 @@ It has been accepted by Uva.
 
 ## Algorithm Overview
 
-Assume we can treat each beads as an undirected edge by connecting two vertices. Then this  question is able to convert to a typical question of printing the Euler tour. An *Euler path* is defined as a path in a graph which vists *each edge* of the graph *exactly once*. An *Euler tour* is an Euler path which starts and ends on the same vertex. In this case, if it is a valid necklace, then colors should be marked exactly once and the first value and last value have the same value. According to our textbook "Competitive Programming 3", to check if a connected undirected graph has an Euler tour, we need to check if all its vertices have even degrees. It can be done in *O(|V| + |E|)*.
+Assume we can treat each bead as an undirected edge by connecting two vertices. Then this  question is able to convert to a typical question of printing the Euler tour. An *Euler path* is defined as a path in a graph which vists *each edge* of the graph *exactly once*. An *Euler tour* is an Euler path which starts and ends on the same vertex. In this case, if it is a valid necklace, then colors should be marked exactly once and the first value and last value have the same value. According to our textbook "Competitive Programming 3", to check if a connected undirected graph has an Euler tour, we need to check if all its vertices have even degrees. It can be done in *O(|V| + |E|)*.
 
 ---
 
@@ -59,7 +59,7 @@ It has been accepted by Uva.
 * Read in the user input and put them into a 2D array which acts as a "maze". Also record the starting point of user, the box and the end point of the box.
 * Start the BFS process for the box from the starting point location.
   * Inside the box's BFS process, we need to do BFS for the person to ensure that the person can reach the box. 
-  * We will check whether the box can be moved to 4 directions: up, down, left and right.
+  * We will check the box moving ability toward four directions: up, down, left and right.
 
 ---
 
