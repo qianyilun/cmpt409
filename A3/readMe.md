@@ -6,7 +6,7 @@ It was written in **C++ 11**. Run by command
 
 ``g++ -lm -lcrypt -O2 -std=c++11 -pipe -DONLINE_JUDGE``
 
-It has been accepted by Uva.
+Uva has accepted it.
 
 ## Observation
 
@@ -135,12 +135,13 @@ Result in Uva is "Time limit exceeded", we believe we have the correct dp set up
 
 # Why we fail
 
-* Input is very complicated 
-  * Countries' name are raw string so when we are trying to use it as dp table index we need to index it first
-  * **Maintaining additional map to map the country name to ID add complexity to implementation**
-  * For each line there is no number of children at hand
-  * "#" set up is quite stupid
-* Detail in dp implementation is complicated too
+•	Input is very complicated
+o	Countries' name is a raw string, so when we are trying to use it as dp table index we need to index it first
+o	Maintaining additional map to map the country name to ID add complexity to the implementation
+o	For each line, there is no number of children at hand
+o	"#" set up is quite stupid
+•	The detail in dp implementation is complicated too
+
   * we believe we have the correct dp set and algorithm but we are missing one or two detail in implementation
   * Details we covered
     * Set infinity value to a value that can be added up without overflow cause INF+INF would happened
