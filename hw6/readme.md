@@ -1,6 +1,6 @@
-Template(delete before submit):
 
-# Problem
+
+# Problem Bejeweled
 
 ## (a) how to store data
 
@@ -14,7 +14,7 @@ Template(delete before submit):
 
 ---
 
-# Problem F- Binary
+# Problem Binary
 
 ## (a) how to store data
 
@@ -75,3 +75,98 @@ end for
 
 ```
 
+---
+
+# Problem CitySlickers
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+
+
+# Problem Cutting Pizza
+
+Draw a circle inside
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem DoingLaundry
+
+sort by drying time, dp
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem LinkingLogos
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem Longshot
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem PrefixGoodness
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem CuttQuantumTeleporters
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem TennisProbability
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem ZurchTrees
+
+## (a) how to store data
+
+## (b) Description methodology
+
+## (c) Pseudocode if needed
