@@ -11,7 +11,7 @@ It has been accepted by Uva.
 ## Algorithm Overview
 
 * It is not able to enumerate all possible solution since the test cases are two large.
-* According to the lecture note, we need to design a dynamic programming to store the valid ways to make sum-weight j. j = 1,2,...,W/2, where W is the total weight of all the persons. 
+* According to the lecture note, it asks to design dynamic programming to store the valid ways to make sum-weight j. j = 1,2,..., W/2 (  W refer to the total weight of all the persons).
 * Binay mentioned in the email, we can use bitmask to solve this question. 
     > If the kth bit of bitmask DP[j] is on, it represents that k number weights are needed to make sum j. We need to use long long integer to store the mask.
 * In addition, DP[0] should be initialized as 1 since there should be only 1 way to allocate the person who has weight 0. 
@@ -59,7 +59,7 @@ It was written in C++ and it was accepted by UVa.
 ## Algorithm Overview
 
 * The number indicated in the problem is too big to calculate directly. 
-* We need to use the algorithm indicated in slide #14 of Number Theory to recursively calculate the exponent for Femat test.
+* The lecture note asks to use the algorithm indicated in slide #14 of Number Theory to calculate the exponent for Femat test recursively.
 * Other than that, we need to use a correct primarity test to determine whether the number is prime or not. We've used looping from 2 to `sqrt(N)` in this question. 
 * Once we have the result, we can determine whether it is a Carmichael number because Carmichael number is not prime and passes all the Femat tests.
 * We can combine the results of the previous 2 points to make a decision.
@@ -78,8 +78,9 @@ It was written in C++ and it was accepted by UVa.
 * It is easy to fine a naive aproach for this problem. 
     * Just start from the coordinate (0, 0) and see at each point, whether we can go left, right, top or bottom and create a recursive call of we can do so. 
     * This way we've been generating all the paths that starts from (0, 0).
-    * And then we can filter out paths that end with (0, 1) and goes through the 3 checkpoints calculated.
-* However, this naive approach is too slow to work with a grid plane with 8 rows and 8 columns.
+    * And then The program will filter out paths that end with (0, 1) and goes through the three checkpoints calculated.
+* However, this naive approach is too slow to work with a grid plane with eight rows and eight columns.
+
 * In order to accelarate the search, we need to do pruning.
     1. We can check if we are at the 1/4, 1/2 and 3/4 steps of the execution. If indeed we are, and we are not at the checkpoints, that means the path we are walking is wrong and we stop the search.
     2. We can also check whether we are currently at the checkpoints. If we are, and we are not at the desired steps, stop the search of the current path because it is not a valid path as well.
