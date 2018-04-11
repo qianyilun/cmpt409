@@ -1,3 +1,9 @@
+* lego
+* prefix goodness
+* QuantumTeleporters
+* TennisProbability
+* ZurchTrees
+
 
 
 # Problem Bejeweled
@@ -91,13 +97,30 @@ end for
 
 # Problem Cutting Pizza
 
-Draw a circle inside
-
 ## (a) how to store data
+
+No data store in this question
 
 ## (b) Description methodology
 
-## (c) Pseudocode if needed
+* Draw a circle inside with r = dignonal of square
+* We have A B C D areas as follow:
+  * ![image-20180410172254359](https://ws2.sinaimg.cn/large/006tKfTcgy1fq8epycs3gj30ue0uqwhl.jpg)
+* Denote
+  * $S_{oc}$  = area of outer circle
+  * $S_{ic}$  = area of inner circle
+  * $S_{sq}$ = area of small square
+* We concluded 3 equations:
+  * $A+2B+C = 1/4 S_{oc}$
+  * B+D = A       (from question)
+  * D = 1/4$S_{ic} - 1/2S_{sq}$
+* D, C are known, the only unknown in 3 equations is B, which we can easily solve
+* $B = 1/12S_{oc} - 1/6S_{ic}-1/4S_{sq}$
+* FInal Area = B+D = $1/12S_{oc} + 1/12 S_{ic}-1/4S_{sq}$
+
+## (c) Implementation:
+
+Solve equation with X and `double pi = acos(-1)`
 
 ---
 
