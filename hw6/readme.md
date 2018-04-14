@@ -194,8 +194,39 @@ sort by drying time, dp
     * We will put blocks to the lower and upper level arrays alternately.
     * **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
 4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego
-    * by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. 
+    * by checking if the element in the upper level is **not** same as the one in the lower level **in the same index** (ignoring overlapping). 
     * Print "yes" in this case, otherwise print "no".
+
+Examples: 
+* 
+```
+Upper level: [ 1 2 2 3 3 3 ]
+Lower level: [ 1 3 3 3 2 2 ]
+
+This denotes we have
+    3 blocks on the upper level: 1x1, 1x2, 1x3 
+    3 blocks on the lower level: 1x1, 1x3, 1x2
+
+This case can be pruned. 
+```
+
+*
+```
+Upper level: [ 1 3 3 3 ]
+Lower level: [ 3 3 3 1 ]
+
+This is OK. 
+```
+
+*
+```
+Upper level: [ 1 3 3 3 ]
+Lower level: [ 1 3 3 3 ]
+
+This is not OK. 
+```
+
+In this examples, when we are checking index-wise, we need to account for overlapping blocks so that they will be considered correctly.
 
 
 ---
