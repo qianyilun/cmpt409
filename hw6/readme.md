@@ -321,7 +321,7 @@ for prefix in all_prefixes:
 	* Dequeue next new one
 	* Decide if the pair is a valid state
 	* Ignore the pair if it is invalid
-	* Otherwise, append it to the tail of the queuemultiplied
+	* Otherwise, append it to the tail of the queue
 	* Update and compare the current shortest distance with the one that after adding the current weight
 3. Comparing and output results by iterating all states'' combination.
 
@@ -338,7 +338,7 @@ for TC in range(T) # <-- reading input based on test case number
 		dequeue the _next_ avaiable item
 
 		for each neighbour of item
-			if (item.states != neighbour.states)multiplied
+			if (item.states != neighbour.states)
 				invalid;
 				continue;
 
@@ -357,7 +357,7 @@ for TC in range(T) # <-- reading input based on test case number
 ## (a) how to store data
 
 We do not need to store any data for this problem.
-multiplied
+
 ## (b) Description methodology
 
 According to a formula presented in page 4 in [this](http://www.nessis.org/nessis07/James_OMalley.pdf) document, the probability of winning a game given the probability $p$ of winning a single point is
