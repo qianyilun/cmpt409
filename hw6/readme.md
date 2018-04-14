@@ -29,20 +29,6 @@ The number of check we need:
 max_score <- 0
 vector_possibleSwaps = []
 for r in each row:
-<<<<<<< HEAD
-	for elements in the 1st to the second last in row r:
-		Pretend to swap the current gem with the gem to the right of it;
-		count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
-		if (count > max_score):
-			vector_possibleSwaps.clear()
-			max_score <- count;
-			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
-		else if (count == max_score):
-			# keep track of this new swap as a possible swap in the vector
-			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
-
-		revert the swap so that the board remains the original one;
-=======
     for elements in the 1st to the second last in row r:
         Pretend to swap the current gem with the gem to the right of it;
         count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
@@ -55,7 +41,6 @@ for r in each row:
             vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
 
         revert the swap so that the board remains the original one;
->>>>>>> fdf69d0420cffec9d5a42bd7c139052417d4e27e
 
 repeat the same procedure above for each column
 ```
