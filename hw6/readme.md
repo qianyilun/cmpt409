@@ -49,7 +49,6 @@ repeat the same procedure above for each column
 
 
 
-
 ---
 
 # Problem Binary
@@ -194,13 +193,43 @@ Solve equation with X and `double pi = acos(-1)`
 
 # Problem DoingLaundry
 
-sort by drying time, dp
-
 ## (a) how to store data
+
+- Read each test case into a vector
 
 ## (b) Description methodology
 
+- Read each test case into a vector
+- Sort vector in decreasing order
+- Assuming all washing were done one after one
+- Maintain a variable to record each job's start drying time
+  - if `a >(1+i)*30` , which means job `i-1`'s **drying** finished after job `i`'s **washing**
+    - So job i's drying can only start after job `i-1`'s **drying**
+  - if `a < (1+i)*30`, job i **drying** can start right after its **washing**
+  - a = max(a, (1+i)*30) + t[i];
+
 ## (c) Pseudocode if needed
+
+```c++
+int main() {
+  int n, x;
+  while (cin >> n && n) {
+    vector<int> t;
+    for (int i = 0; i < n && cin >> x; ++i)
+      t.push_back(x);
+
+    sort(t.rbegin(), t.rend());
+    int a = 0;
+    for (int i = 0; i < n; ++i)
+      a = max(a, (1+i)*30) + t[i];
+    cout << a/60 << ":" << (a%60 < 10 ? "0" : "")
+	 << a%60 << endl;
+  }
+}
+
+```
+
+
 
 ---
 
@@ -257,7 +286,6 @@ where the first half of the sequence is the same as the second half.
 ```
 
 In this examples, when we are checking index-wise, we need to account for overlapping blocks so that they will be considered correctly.
-
 
 ---
 
