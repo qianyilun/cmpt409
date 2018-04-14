@@ -144,7 +144,7 @@ xkzr.
 .y...
 ```
 
-```java
+``` java
 // Diskstra's algorithm cal be found in the codebook link above.
 void dijkstra(int graph[V][V], int src);
 
@@ -157,8 +157,8 @@ int graph[5[5] = {
     {0, 1, 0, 0, 0}
 };
 dijkstra(graph, 0);
-```
 
+```
 ---
 
 
@@ -299,7 +299,7 @@ In this examples, when we are checking index-wise, we need to account for overla
 	* Ignore the pair if it is invalid
 	* Otherwise, append it to the tail of the queue
 	* Update and compare the current shortest distance with the one that after adding the current weight
-3. Comparing and output results by iterating all states's combination.
+3. Comparing and output results by iterating all states'' combination.
 
 ## (c) Pseudocode if needed
 ``` python
@@ -350,7 +350,25 @@ The probability density function plot will look like this:
 # Problem ZurchTrees
 
 ## (a) how to store data
+* Adjacent list with Integer, Set<Integer> to store the graph
+* Queue to store nodes
 
 ## (b) Description methodology
+To find the minimum number of policy is to find the number of common ancestors in the graph.
+
+1. Read the input and generate the corresponding adjacency list
+2. Using BFS to traverse the graph and count the number of edges for each node as degrees
+3. Print the number of degrees that is larger than 3. Then we believe these nodes are common ancestors.
 
 ## (c) Pseudocode if needed
+``` python
+for each input
+  initializ the adjacency list <Integer, Set<Integer>>
+
+  # BFS
+  while (queue != empty)
+    BFS to count the number of degrees for each nodes
+
+  for each degree
+    print the number of degrees that are larger than or equal to 2.
+```
