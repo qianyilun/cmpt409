@@ -10,9 +10,41 @@
 
 ## (a) how to store data
 
+* Create an `enum` to store different types of gems. 
+* Store the whole board using an 8x8 2-dimensional array of `enum`.
+* Create a vector to store multiple possible swaps
+
 ## (b) Description methodology
 
+We would like to brute force and keep track of a max number of score along the process. 
+
+During the process, for each row and for each column, pretend to swap a pair of gems and count the max score. Update the variable to keep track of the max score and revert the swap so that the board will be in its original condition. 
+
+The number of check we need:
+100 * 8 * 8 * (the check to get score in this swap)
+
 ## (c) Pseudocode if needed
+
+```r
+max_score <- 0
+vector_possibleSwaps = []
+for r in each row:
+	for elements in the 1st to the second last in row r:
+		Pretend to swap the current gem with the gem to the right of it;
+		count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
+		if (count > max_score):
+			vector_possibleSwaps.clear()
+			max_score <- count;
+			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+		else if (count == max_score):
+			# keep track of this new swap as a possible swap in the vector
+			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+		
+		revert the swap so that the board remains the original one;
+
+repeat the same procedure above for each column
+```
+
 
 
 
@@ -139,7 +171,22 @@ sort by drying time, dp
 
 ## (a) how to store data
 
+* Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level. 
+	* The maximum size per array is $15 \times 5$. 
+	* Arrays will be initialized as 0 for all elements. 
+
+
 ## (b) Description methodology
+
+1. Read in the data.
+2. Traverse and calculate the sum of all elements in one line.
+	* **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question. 
+3. Calculate the permutations of all building blocks. 
+	* We will put blocks to the lower and upper level arrays alternately.
+	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
+4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. Print "yes" in this case, otherwise print "no".
+
+
 
 ## (c) Pseudocode if needed
 
