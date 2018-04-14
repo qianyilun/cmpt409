@@ -86,7 +86,8 @@ end for
 # Problem CitySlickers
 
 ## (a) how to store data
-By reading the input, generate a adjacency matrix to present each edge and weight.
+* Generate a adjacency matrix to present each edge and vertices.
+* Creat a class to contain the weight of corresponding edges
 
 ## (b) Description methodology
 1. Store the graph
