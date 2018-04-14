@@ -29,18 +29,18 @@ The number of check we need:
 max_score <- 0
 vector_possibleSwaps = []
 for r in each row:
-	for elements in the 1st to the second last in row r:
-		Pretend to swap the current gem with the gem to the right of it;
-		count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
-		if (count > max_score):
-			vector_possibleSwaps.clear()
-			max_score <- count;
-			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
-		else if (count == max_score):
-			# keep track of this new swap as a possible swap in the vector
-			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
-		
-		revert the swap so that the board remains the original one;
+    for elements in the 1st to the second last in row r:
+        Pretend to swap the current gem with the gem to the right of it;
+        count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
+        if (count > max_score):
+            vector_possibleSwaps.clear()
+            max_score <- count;
+            vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+        else if (count == max_score):
+            # keep track of this new swap as a possible swap in the vector
+            vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+        
+        revert the swap so that the board remains the original one;
 
 repeat the same procedure above for each column
 ```
@@ -98,17 +98,17 @@ repeat the same procedure above for each column
 i = 2; % iterator
 A[0] = 1, A[1] = 2
 while element in A < 10^9
-	A[i] = (2^i - 2^(i-1)i + A[i-1];
-	i++
+    A[i] = (2^i - 2^(i-1)i + A[i-1];
+    i++
 end while
 
 % read each k
 for each input k
-	find first element in A larger than k;
-	j = index of this element;
-	k falls into decimal value D = 2^(j-1) + (k-A[j-1])/j;
-	D_b = binary of D;
-	print according bit;
+    find first element in A larger than k;
+    j = index of this element;
+    k falls into decimal value D = 2^(j-1) + (k-A[j-1])/j;
+    D_b = binary of D;
+    print according bit;
 end for
 
 ```
@@ -182,18 +182,20 @@ sort by drying time, dp
 ## (a) how to store data
 
 * Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level. 
-	* The maximum size per array is $15 \times 5$. 
-	* Arrays will be initialized as 0 for all elements. 
+    * The maximum size per array is $15 \times 5$. 
+    * Arrays will be initialized as 0 for all elements. 
 
 ## (b) Description methodology
 
 1. Read in the data.
 2. Traverse and calculate the sum of all elements in one line.
-	* **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question. 
+    * **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question. 
 3. Calculate the permutations of all building blocks. 
-	* We will put blocks to the lower and upper level arrays alternately.
-	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
-4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. Print "yes" in this case, otherwise print "no".
+    * We will put blocks to the lower and upper level arrays alternately.
+    * **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
+4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego
+    * by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. 
+    * Print "yes" in this case, otherwise print "no".
 
 
 ---
