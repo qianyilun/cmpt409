@@ -275,9 +275,33 @@ In this examples, when we are checking index-wise, we need to account for overla
 
 ## (a) how to store data
 
+* Create a suffix array of all the strings so that we can calculate the common prefix of 2 strings
+
 ## (b) Description methodology
 
+1. Compute all the prefixes of the strings
+2. For each prefix, determine how many strings have the same prefix
+3. Also record the length of the prefix
+4. Compute the prefix goodness b y multiplying the length of the prefix by the number of strings having the same prefix
+
 ## (c) Pseudocode if needed
+
+```python
+all_prefixes = []
+for string in all_strings:
+    sa = suffixArray(string)
+    prefixes = sa.findPrefix()
+    all_prefixes.append(prefixes)
+
+largest_goodness = 0
+for prefix in all_prefixes:
+    num = determine how many strings have the same prefix
+    length = len(prefix)
+    prefix_goodness = num * length
+
+    if prefix_goodness > largest_goodness:
+        largest_goodness = prefix_goodness
+```
 
 ---
 
@@ -297,7 +321,7 @@ In this examples, when we are checking index-wise, we need to account for overla
 	* Dequeue next new one
 	* Decide if the pair is a valid state
 	* Ignore the pair if it is invalid
-	* Otherwise, append it to the tail of the queue
+	* Otherwise, append it to the tail of the queuemultiplied
 	* Update and compare the current shortest distance with the one that after adding the current weight
 3. Comparing and output results by iterating all states'' combination.
 
@@ -314,7 +338,7 @@ for TC in range(T) # <-- reading input based on test case number
 		dequeue the _next_ avaiable item
 
 		for each neighbour of item
-			if (item.states != neighbour.states)
+			if (item.states != neighbour.states)multiplied
 				invalid;
 				continue;
 
@@ -333,7 +357,7 @@ for TC in range(T) # <-- reading input based on test case number
 ## (a) how to store data
 
 We do not need to store any data for this problem.
-
+multiplied
 ## (b) Description methodology
 
 According to a formula presented in page 4 in [this](http://www.nessis.org/nessis07/James_OMalley.pdf) document, the probability of winning a game given the probability $p$ of winning a single point is
