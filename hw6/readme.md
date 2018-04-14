@@ -208,7 +208,8 @@ This denotes we have
     3 blocks on the upper level: 1x1, 1x2, 1x3 
     3 blocks on the lower level: 1x1, 1x3, 1x2
 
-This case can be pruned. 
+This case is not OK because the first index we are checking is the same.
+This denotes that the lego will be separated after the first index. 
 ```
 
 *
@@ -224,7 +225,8 @@ This is OK.
 Upper level: [ 1 3 3 3 ]
 Lower level: [ 1 3 3 3 ]
 
-This is not OK. 
+This is not OK and can be pruned because the sequence generated is 1 3 3 3 1 3 3 3, 
+where the first half of the sequence is the same as the second half. 
 ```
 
 In this examples, when we are checking index-wise, we need to account for overlapping blocks so that they will be considered correctly.
