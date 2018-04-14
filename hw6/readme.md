@@ -171,10 +171,19 @@ sort by drying time, dp
 
 ## (a) how to store data
 
+## (b) Description methodology
+
+## (c) Pseudocode if needed
+
+---
+
+# Problem LinkingLogos
+
+## (a) how to store data
+
 * Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level. 
 	* The maximum size per array is $15 \times 5$. 
 	* Arrays will be initialized as 0 for all elements. 
-
 
 ## (b) Description methodology
 
@@ -186,19 +195,6 @@ sort by drying time, dp
 	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
 4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. Print "yes" in this case, otherwise print "no".
 
-
-
-## (c) Pseudocode if needed
-
----
-
-# Problem LinkingLogos
-
-## (a) how to store data
-
-## (b) Description methodology
-
-## (c) Pseudocode if needed
 
 ---
 
