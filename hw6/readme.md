@@ -32,7 +32,7 @@
 
 1. Preprocess an array A where A[i] stores the first digit number of value 2^i
 
-   * ex. 
+   * ex.
      * A looks like [1 2 6 18 50 …..]
      * i = 2, A[2] = 6, indicate value 4 (2^2) 's first digit number is 6
      * 0 1 10 11 100, =>  $4_{10}$ = $100_2$ , where 1 in $100_2$ in the $6_{th}$ digit in binary sequence
@@ -44,17 +44,17 @@
        * A[3] = $(2^3-2^2)*3 + A[2] = 18$, where A[2] = 6
    * Stop allocate A until A[n] >= max k = 10^9
 
-2. Recover 
+2. Recover
 
    * ex. input k = 30
    * Search first element in A that A[i] > k, in this case A[3] = 18, A[4] = 50, i = 4
    * k falls between 3 and 4 (i -1 to i)
      * between $18_{th}$ digit and $50_{th}$ digit are all 4 digits number
-     * 1000, 1001, 1010, ………. ,1111, there are 
-       * $(50-18)/4 = 8$ 
+     * 1000, 1001, 1010, ………. ,1111, there are
+       * $(50-18)/4 = 8$
        * $(A[i] - A[i-1])/i$  decimal numbers
        * $30_{th}$ digits falls in (30-18)/4 + 1= $4_{th}$ decimal numbers
-         * **To sum up**, input k falls into{$2^{i-1} + (k-A[i-1])/i​$ }th decimal number 
+         * **To sum up**, input k falls into{$2^{i-1} + (k-A[i-1])/i​$ }th decimal number
        * Then print the according bit in binary
 
    ​
@@ -86,10 +86,18 @@ end for
 # Problem CitySlickers
 
 ## (a) how to store data
+By reading the input, generate a adjacency matrix to present each edge and weight.
 
 ## (b) Description methodology
+1. Store the graph
+2. Treat weights of mountain as 1 and others as 0
+  * Now, it becomes a question to find the shortest path of a weighted undirect graph. Weights are either 0 or 1.
+3. Using Dijkstra’s shortest path algorithm to find the solution
 
 ## (c) Pseudocode if needed
+The implementation of Dijkstra's algorithm codebook can be found below.
+
+https://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/
 
 ---
 
