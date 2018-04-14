@@ -332,7 +332,16 @@ for TC in range(T) # <-- reading input based on test case number
 
 ## (a) how to store data
 
+We do not need to store any data for this problem.
+
 ## (b) Description methodology
+
+According to a formula presented in page 4 in [this](http://www.nessis.org/nessis07/James_OMalley.pdf) document, the probability of winning a game given the probability $p$ of winning a single point is
+$$Pr(Win\ game) = p^4 + 4p^4(1-p) + 10p^4(1-p)^2 + 20p^3(1-p)^3 \times \frac{p^2}{1-2p(1-p)}$$
+
+The probability density function plot will look like this:
+
+![](tennis-formula-pdf.png)
 
 ## (c) Pseudocode if needed
 
