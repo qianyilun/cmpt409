@@ -132,6 +132,33 @@ The implementation of Dijkstra's algorithm codebook can be found below.
 
 https://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/
 
+Example:
+
+Convert the following input into code:
+
+```
+...n.
+.rmnx
+xxvn.
+xkzr.
+.y...
+```
+
+```java
+// Diskstra's algorithm cal be found in the codebook link above.
+void dijkstra(int graph[V][V], int src); 
+
+// Input and how to run:
+int graph[5[5] = {
+    {0, 0, 0, 1, 0},
+    {0, 0, 1, 1, 1},
+    {1, 1, 1, 1, 0},
+    {1, 1, 1, 1, 0},
+    {0, 1, 0, 0, 0}
+};
+dijkstra(graph, 0);
+```
+
 ---
 
 
