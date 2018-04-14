@@ -288,6 +288,13 @@ In this examples, when we are checking index-wise, we need to account for overla
 * 1-D array that stores the bits in these strings can win a 4-way tourney
 
 ## (b) Description methodology
+1. Read the input
+2. Permutate from 0 to 16-bit.
+  * For each permutation, detect the permutation has 8 1's which represents who wins 8 matches
+  * Store each result of each player
+3. Iterate the solution to out the result list
+
+
 
 ## (c) Pseudocode if needed
 
