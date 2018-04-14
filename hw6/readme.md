@@ -10,15 +10,15 @@
 
 ## (a) how to store data
 
-* Create an `enum` to store different types of gems. 
+* Create an `enum` to store different types of gems.
 * Store the whole board using an 8x8 2-dimensional array of `enum`.
 * Create a vector to store multiple possible swaps
 
 ## (b) Description methodology
 
-We would like to brute force and keep track of a max number of score along the process. 
+We would like to brute force and keep track of a max number of score along the process.
 
-During the process, for each row and for each column, pretend to swap a pair of gems and count the max score. Update the variable to keep track of the max score and revert the swap so that the board will be in its original condition. 
+During the process, for each row and for each column, pretend to swap a pair of gems and count the max score. Update the variable to keep track of the max score and revert the swap so that the board will be in its original condition.
 
 The number of check we need:
 100 * 8 * 8 * (the check to get score in this swap)
@@ -39,7 +39,7 @@ for r in each row:
 		else if (count == max_score):
 			# keep track of this new swap as a possible swap in the vector
 			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
-		
+
 		revert the swap so that the board remains the original one;
 
 repeat the same procedure above for each column
@@ -181,18 +181,18 @@ sort by drying time, dp
 
 ## (a) how to store data
 
-* Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level. 
-	* The maximum size per array is $15 \times 5$. 
-	* Arrays will be initialized as 0 for all elements. 
+* Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level.
+	* The maximum size per array is $15 \times 5$.
+	* Arrays will be initialized as 0 for all elements.
 
 ## (b) Description methodology
 
 1. Read in the data.
 2. Traverse and calculate the sum of all elements in one line.
-	* **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question. 
-3. Calculate the permutations of all building blocks. 
+	* **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question.
+3. Calculate the permutations of all building blocks.
 	* We will put blocks to the lower and upper level arrays alternately.
-	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together. 
+	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together.
 4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. Print "yes" in this case, otherwise print "no".
 
 
@@ -218,14 +218,51 @@ sort by drying time, dp
 
 ---
 
-# Problem CuttQuantumTeleporters
+# Problem QuantumTeleporters
 
 ## (a) how to store data
+1. A 1-D array of state A to store each node whose state is A.
+2. A 1-D array of state B to store each node whose state is B.
+3. A 2-D array that stores a pair of <int, int> to identify the state of each node.
+4. A queue to store the nodes and then traverse the graph as the BFS does.
+5. A variable that maintain the current minimum distance.
+6. A 3-D array to store the weight of each edge since  state is 2-D.
 
 ## (b) Description methodology
+1. Read the input
+2. Using a queue as the data structure
+	* Dequeue next new one
+	* Decide if the pair is a valid state
+	* Ignore the pair if it is invalid
+	* Otherwise, append it to the tail of the queue
+	* Update and compare the current shortest distance with the one that after adding the current weight
+3. Comparing and output results by iterating all states's combination.
 
 ## (c) Pseudocode if needed
+``` python
+for TC in range(T) # <-- reading input based on test case number
+	for i in range(N)
+		# initialize the connector array
 
+	for i in range(M)
+		# initialize the current shortest distance for each states
+
+	while (queue != empty)
+		dequeue the _next_ avaiable item
+
+		for each neighbour of item
+			if (item.states != neighbour.states)
+				invalid;
+				continue;
+
+		else
+			for each neighbour of item
+				shortest_minimum = max(shortest_minimum, previous_distance + weight(item, neighbour))
+
+			queue.add(neighbour)
+
+	print result
+```
 ---
 
 # Problem TennisProbability
