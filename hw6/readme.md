@@ -1,11 +1,3 @@
-* lego
-* prefix goodness
-* QuantumTeleporters
-* TennisProbability
-* ZurchTrees
-
-
-
 # Problem Bejeweled
 
 ## (a) how to store data
@@ -292,6 +284,8 @@ In this examples, when we are checking index-wise, we need to account for overla
 # Problem Longshot
 
 ## (a) how to store data
+* 1-D array that store all the bit strings with exactly 4 1's
+* 1-D array that stores the bits in these strings can win a 4-way tourney
 
 ## (b) Description methodology
 
