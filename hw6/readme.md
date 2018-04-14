@@ -29,6 +29,7 @@ The number of check we need:
 max_score <- 0
 vector_possibleSwaps = []
 for r in each row:
+<<<<<<< HEAD
 	for elements in the 1st to the second last in row r:
 		Pretend to swap the current gem with the gem to the right of it;
 		count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
@@ -41,6 +42,20 @@ for r in each row:
 			vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
 
 		revert the swap so that the board remains the original one;
+=======
+    for elements in the 1st to the second last in row r:
+        Pretend to swap the current gem with the gem to the right of it;
+        count <- sum of same consequence gems in the current row and current column (w/o overlapping gems);
+        if (count > max_score):
+            vector_possibleSwaps.clear()
+            max_score <- count;
+            vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+        else if (count == max_score):
+            # keep track of this new swap as a possible swap in the vector
+            vector_possibleSwaps.push_back(row, column, the direction 'R' or 'D')
+
+        revert the swap so that the board remains the original one;
+>>>>>>> fdf69d0420cffec9d5a42bd7c139052417d4e27e
 
 repeat the same procedure above for each column
 ```
@@ -98,17 +113,17 @@ repeat the same procedure above for each column
 i = 2; % iterator
 A[0] = 1, A[1] = 2
 while element in A < 10^9
-	A[i] = (2^i - 2^(i-1)i + A[i-1];
-	i++
+    A[i] = (2^i - 2^(i-1)i + A[i-1];
+    i++
 end while
 
 % read each k
 for each input k
-	find first element in A larger than k;
-	j = index of this element;
-	k falls into decimal value D = 2^(j-1) + (k-A[j-1])/j;
-	D_b = binary of D;
-	print according bit;
+    find first element in A larger than k;
+    j = index of this element;
+    k falls into decimal value D = 2^(j-1) + (k-A[j-1])/j;
+    D_b = binary of D;
+    print according bit;
 end for
 
 ```
@@ -131,6 +146,33 @@ end for
 The implementation of Dijkstra's algorithm codebook can be found below.
 
 https://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/
+
+Example:
+
+Convert the following input into code:
+
+```
+...n.
+.rmnx
+xxvn.
+xkzr.
+.y...
+```
+
+```java
+// Diskstra's algorithm cal be found in the codebook link above.
+void dijkstra(int graph[V][V], int src);
+
+// Input and how to run:
+int graph[5[5] = {
+    {0, 0, 0, 1, 0},
+    {0, 0, 1, 1, 1},
+    {1, 1, 1, 1, 0},
+    {1, 1, 1, 1, 0},
+    {0, 1, 0, 0, 0}
+};
+dijkstra(graph, 0);
+```
 
 ---
 
@@ -182,18 +224,54 @@ sort by drying time, dp
 ## (a) how to store data
 
 * Create 2 arrays to emunerate stacking up legos: One array is to store legos on the lower level while the other one is for the upper level.
-	* The maximum size per array is $15 \times 5$.
-	* Arrays will be initialized as 0 for all elements.
+    * The maximum size per array is $15 \times 5$.
+    * Arrays will be initialized as 0 for all elements.
 
 ## (b) Description methodology
 
 1. Read in the data.
 2. Traverse and calculate the sum of all elements in one line.
-	* **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question.
+    * **A case to prune half of cases**: If the sum is not divisible by 2 then we can assert that these legos will not be linked together as described in the question.
 3. Calculate the permutations of all building blocks.
-	* We will put blocks to the lower and upper level arrays alternately.
-	* **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together.
-4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego by checking if the element in the upper level is **not** same as the one in the lower level **in the same index**. Print "yes" in this case, otherwise print "no".
+    * We will put blocks to the lower and upper level arrays alternately.
+    * **Case we can prune**: If the front part of the sequence is the same as the remaining part (1x1, 1x3, 1x1, 1x3), we can be sure that this does not work as the lego we built will not be able to link together.
+4. Loop through the upper and lower arrays to check whether indeed it can form a linked lego
+    * by checking if the element in the upper level is **not** same as the one in the lower level **in the same index** (ignoring overlapping).
+    * Print "yes" in this case, otherwise print "no".
+
+Examples:
+
+*
+```
+Upper level: [ 1 2 2 3 3 3 ]
+Lower level: [ 1 3 3 3 2 2 ]
+
+This denotes we have
+    3 blocks on the upper level: 1x1, 1x2, 1x3
+    3 blocks on the lower level: 1x1, 1x3, 1x2
+
+This case is not OK because the first index we are checking is the same.
+This denotes that the lego will be separated after the first index.
+```
+
+*
+```
+Upper level: [ 1 3 3 3 ]
+Lower level: [ 3 3 3 1 ]
+
+This is OK.
+```
+
+*
+```
+Upper level: [ 1 3 3 3 ]
+Lower level: [ 1 3 3 3 ]
+
+This is not OK and can be pruned because the sequence generated is 1 3 3 3 1 3 3 3,
+where the first half of the sequence is the same as the second half.
+```
+
+In this examples, when we are checking index-wise, we need to account for overlapping blocks so that they will be considered correctly.
 
 
 ---
