@@ -198,6 +198,7 @@ sort by drying time, dp
     * Print "yes" in this case, otherwise print "no".
 
 Examples: 
+
 * 
 ```
 Upper level: [ 1 2 2 3 3 3 ]
