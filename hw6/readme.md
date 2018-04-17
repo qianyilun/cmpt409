@@ -284,19 +284,55 @@ In this examples, when we are checking index-wise, we need to account for overla
 # Problem Longshot
 
 ## (a) how to store data
-* 1-D array that store all the bit strings with exactly 4 1's
-* 1-D array that stores the bits in these strings can win a 4-way tourney
+
+* Store each test case into a 2d array win
 
 ## (b) Description methodology
 1. Read the input
-2. Permutate from 0 to 16-bit.
-  * For each permutation, detect the permutation has 8 1's which represents who wins 8 matches
-  * Store each result of each player
-3. Iterate the solution to out the result list
-
+2. **Permutation** for all winning tree
+   1. Assign an array A with length 16, initialize with all -1
+   2. calculate all permutations of A having 8 1s, indicating **8** corresponding players go into **Quarterfinals**
+   3. Use all permutations in step 2.2,  each calculate all permutations of array having 4 1s, indicating 4 corresponding players go into **Semifinals**
+   4. Use all permutations in step 2.3, each calculate two players of **finals**
+3. During calculating of permutation, if the permutation doesn't satisfy input, skip this permutation
+   1. ex. if a permutation of 8 players doesn't satisfy input, we don't need to calculate its 4 players permutations.
+4. If a player stays in final two players then return true since its previous 8 and 4 permutation **survived** for input
 
 
 ## (c) Pseudocode if needed
+
+```Java
+play(win, m1, m2){
+	check who wins, denote I winner's index
+	result = 16 bits binary variable where I=1 and everywhere else = 0
+	//ex. I = 2, result = 0100000000000000
+	return result
+}
+
+win4(win,P4){
+	for all possible final match up m in P4
+    	result = result or play(win,m1, m2);
+    return result;
+}
+win8(win,P8){
+	for all permutation P4 of 4 1s 
+		    result = result or win4(win,P4);
+	return result;
+}
+
+main
+    for each test case
+        read data in array win
+        result = 0;
+        for all permutation P8 of 8 1s 
+            result = result or win8(win,P8);
+        endfor
+        for i = 0 to 15
+            if ((result>>i)&1)
+               output result;
+        endfor
+    endfor    	
+```
 
 ---
 
