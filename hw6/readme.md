@@ -8,9 +8,9 @@
 
 ## (b) Description methodology
 
-We would like to brute force and keep track of a max number of score along the process.
+The brute force alogrithm is used to keep track of the max number of score along the process.
 
-During the process, for each row and for each column, pretend to swap a pair of gems and count the max score. Update the variable to keep track of the max score and revert the swap so that the board will be in its original condition.
+During the process, for each row and column, the program pretends to swap a pair of gems and count the max score. Then it will update the variable to keep track of the max score. It reverts the swap so that the board will be in its original condition.
 
 The number of check we need:
 100 * 8 * 8 * (the check to get score in this swap)
@@ -47,7 +47,7 @@ repeat the same procedure above for each column
 
 ## (a) how to store data
 
-1. Preprocess an array A to store the range of K with different length binary number ( more on part(b) )
+1. Pre-process an array A to store the range of K with different length binary number ( more on part(b) )
 
 ## (b) Description methodology
 
