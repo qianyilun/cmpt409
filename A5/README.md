@@ -2,15 +2,15 @@
 
 ## Set up
 
-It was written in **C++ 11**. Run by command
+The `Necklace` is written in `C++ 11`. Run it by command
 
 ``g++ -lm -lcrypt -O2 -std=c++11 -pipe -DONLINE_JUDGE``
 
-It has been accepted by Uva.
+Source code passed all test cases in the Uva website.
 
 ## Algorithm Overview
 
-Assume we can treat each beads as an undirected edge by connecting two vertices. Then this  question is able to convert to a typical question of printing the Euler tour. An *Euler path* is defined as a path in a graph which vists *each edge* of the graph *exactly once*. An *Euler tour* is an Euler path which starts and ends on the same vertex. In this case, if it is a valid necklace, then colors should be marked exactly once and the first value and last value have the same value. According to our textbook "Competitive Programming 3", to check if a connected undirected graph has an Euler tour, we need to check if all its vertices have even degrees. It can be done in *O(|V| + |E|)*.
+Assuming each bead is an undirected edge connecting two vertices. In another word, it converts to a typical question of printing the Euler tour. An *Euler path* is a path in a graph which vists *each edge* of the graph *exactly once*. Then, an *Euler tour* is an Euler path with the same starting and ending vertex. For a valid necklace, colors should be marked exactly once. The first value and last value will have the same value. According to our textbook "Competitive Programming 3", to check if a connected undirected graph has an Euler tour, we need to check if all its vertices have even degrees. This checking can be done in *O(|V| + |E|)*.
 
 ---
 
