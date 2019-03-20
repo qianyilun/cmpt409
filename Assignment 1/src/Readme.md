@@ -2,7 +2,7 @@
 
 ## Set up
 
-It was written in **C++ 5.3**. Run by command
+Written in **C++ 5.3**. Run the program by command
 
 ```g++ -lm -lcrypt -O2 -pipe -DONLINE_JUDGE FleaCircus.cpp```
 
@@ -18,9 +18,9 @@ It was written in **C++ 5.3**. Run by command
 
 Graph is implemented by an array of vector.
 
-Each element in the array represents one node. Each element in vector represents the connected nodes. 
+Each element in the array represents one node. Each element in vector represents connected nodes. 
 
-ex. a is connected with b,c,d, then g[a] is a vector has b, c, d
+ex. `a` is connected with `b`,`c`,`d`, then `g[a]` is a vector has `b`, `c`, `d`
 
 ### DFS
 
