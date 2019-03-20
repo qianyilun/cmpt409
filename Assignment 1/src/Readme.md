@@ -8,8 +8,8 @@ It was written in **C++ 5.3**. Run by command
 
 ## Algorithm overview
 
-1. Build a graph
-2. DFS to get the path between two nodes
+1. Build graph
+2. DFS to get the path between two node
 3. If the path length is even number, they meet. If not, they jump forever.
 
 ## Implementation detail
@@ -25,8 +25,6 @@ ex. a is connected with b,c,d, then g[a] is a vector has b, c, d
 ### DFS
 
 DFS(start, end, parent), which call itself recursion.
-
-The para parent is to prevent it search back.
 
 ### Path
 
@@ -131,10 +129,6 @@ If we get path 8542 - (1), where length = 4, then they meet at 4.
 <li>The will be further comparison if the highest card is the same as well. In this case, the program will construct the “or” bits with 4 suits (<span class="katex--inline"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>C</mi><mo>[</mo><mi>i</mi><mo>]</mo><mo>∣</mo><mi>D</mi><mo>[</mo><mi>i</mi><mo>]</mo><mo>∣</mo><mi>H</mi><mo>[</mo><mi>i</mi><mo>]</mo><mo>∣</mo><mi>S</mi><mo>[</mo><mi>i</mi><mo>]</mo><mo separator="true">,</mo><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><mn>1</mn><mn>3</mn></mrow><annotation encoding="application/x-tex">C[i] \mid D[i] \mid H[i] \mid S[i], i = 1, ..., 13</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height: 0.75em;"></span><span class="strut bottom" style="height: 1em; vertical-align: -0.25em;"></span><span class="base"><span class="mord mathit" style="margin-right: 0.07153em;">C</span><span class="mopen">[</span><span class="mord mathit">i</span><span class="mclose">]</span><span class="mrel">∣</span><span class="mord mathit" style="margin-right: 0.02778em;">D</span><span class="mopen">[</span><span class="mord mathit">i</span><span class="mclose">]</span><span class="mrel">∣</span><span class="mord mathit" style="margin-right: 0.08125em;">H</span><span class="mopen">[</span><span class="mord mathit">i</span><span class="mclose">]</span><span class="mrel">∣</span><span class="mord mathit" style="margin-right: 0.05764em;">S</span><span class="mopen">[</span><span class="mord mathit">i</span><span class="mclose">]</span><span class="mpunct">,</span><span class="mord mathit">i</span><span class="mrel">=</span><span class="mord mathrm">1</span><span class="mpunct">,</span><span class="mord mathrm">.</span><span class="mord mathrm">.</span><span class="mord mathrm">.</span><span class="mpunct">,</span><span class="mord mathrm">1</span><span class="mord mathrm">3</span></span></span></span></span>) which will tell us which value in the 13 values does the poker hand have and then compare the number. The poker hand which has the higher number of “or” bits will win.</li>
 </ol>
 <h1 id="check-the-check">Check the Check</h1>
-<h3 id="how-to-run-1">How to run</h3>
-<p>Tested and built under Ubuntu with GCC 5.4. Command:
-<code>g++ -std=c++11 -Wall -Wextra CheckTheCheck.cpp</code></p>
-<h3 id="steps-performed-in-the-program-1">Steps Performed in the Program</h3>
 <ol>
 <li>Read console inputs and then build an 8x8 2-dimentional vector to store the information.</li>
 <li>Find the coordinates of both white and black kings by going through the data structure.</li>
@@ -147,6 +141,11 @@ If we get path 8542 - (1), where length = 4, then they meet at 4.
 </li>
 <li>Knight’s jumping will be checked separately because it doesn’t follow any specific horizontal, vertical or diagonal move.</li>
 </ol>
+<h3 id="how-to-run-1">How to run</h3>
+<p>Tested and built under Ubuntu with GCC 5.4. Command:
+<code>g++ -std=c++11 -Wall -Wextra CheckTheCheck.cpp</code></p>
+<h3 id="steps-performed-in-the-program-1">Steps Performed in the Program</h3>
+
 
 ------
 
